@@ -1,35 +1,43 @@
-.hero-context{
-    background-color: #780505;
-    padding: 40px;
+.hero-context {
+  background-color: #780505;
+  padding: 40px;
 }
 
-h2{
-    color: azure;
-    font-size: 48px;
-    text-align: center;
-    padding: 0px;
-    margin: 0px;
+h2 {
+  color: azure;
+  font-size: 48px;
+  text-align: center;
+  padding: 0px;
+  margin: 0px;
 }
 
-.text{
-    margin: 0px;
-    margin-top: 20px;
-    font-size: 24px;
-    color: #f5debd;
-    text-align: center;
-    padding: 0px;
+.text {
+  margin: 0px;
+  margin-top: 20px;
+  font-size: 24px;
+  color: #f5debd;
+  text-align: center;
+  padding: 0px;
 }
 
-.hero-button{
-    margin-top: 40px;
-    text-align: center;
+.hero-button {
+  margin-top: 40px;
+  text-align: center;
 }
 
-.button{
-text-align: center;
-    padding: 14px 22px;
+.button {
+  text-align: center;
+  padding: 14px 22px;
   border: 2px solid #d3a019;
   cursor: pointer;
   font-size: 24px;
   transition: 0.3s;
+  background-color: #f0e6d5;
+  font-family: "Zabava";
+  letter-spacing: 1яpx;
+}
+
+.button:hover {
+  background-color: #780505;
+  color: aliceblue;
 }

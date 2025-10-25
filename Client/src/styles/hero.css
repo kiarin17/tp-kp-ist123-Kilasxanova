@@ -1,6 +1,6 @@
 .hero {
-    background-image: url(../img/tasting-room.png);
-  width: 95,5%;
+  background-image: url(../img/tasting-room.png);
+  width: 95, 5%;
   min-height: 80vh;
   display: flex;
   align-items: center;
@@ -11,19 +11,18 @@
   max-width: 700px;
 }
 
-h1{
-    font-size: 64px;
-    font-family: "Zabava";
-    color: #780505;
+h1 {
+  font-size: 64px;
+  font-family: "Zabava";
+  color: #780505;
 }
-h2{
-    font-size: 32px;
-}
-
-p{
-    font-size: 18px;
+h2 {
+  font-size: 32px;
 }
 
+p {
+  font-size: 18px;
+}
 
 .hero-divider {
   width: 100%;
@@ -56,29 +55,31 @@ p{
   font-size: 24px;
   transition: 0.3s;
   font-family: "Zabava";
-
 }
 
 .btn-primary {
   background: #c40024;
   color: #fff;
+  border: 2px solid #d3a019;
 }
 
 .btn-primary:hover {
   background-color: #780505;
   color: #fff;
+  border: 2px solid #d3a019;
 }
 
 .btn-secondary {
-  background: #F0E6D5;
+  background: #f0e6d5;
   color: #000000;
+  border: 2px solid #d3a019;
 }
 
 .btn-secondary:hover {
   background: #780505;
   color: #ffffff;
+  border: 2px solid #d3a019;
 }
-
 
 @media (max-width: 768px) {
   .hero {

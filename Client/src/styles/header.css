@@ -1,18 +1,17 @@
 @font-face {
-    font-family: 'Zabava';
-    src: url('../fonts/Zabava.ttf');
+  font-family: "Zabava";
+  src: url("../fonts/Zabava.ttf");
 }
 
 @font-face {
-    font-family: 'TDDobruiYstav24';
-    src: url(../fonts/TDDobruiYstav24.otf);
+  font-family: "TDDobruiYstav24";
+  src: url(../fonts/TDDobruiYstav24.otf);
 }
-
 
 header {
   background-color: #f5f5f5;
   padding: 15px 30px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-between; /* логотип слева, меню справа */
   align-items: center;
@@ -40,7 +39,7 @@ header {
   margin: 0;
   font-size: 20px;
   font-weight: bold;
-  font-family: 'Zabava';
+  font-family: "Zabava";
 }
 
 .slogan {
@@ -49,30 +48,29 @@ header {
   color: #555;
 }
 
-
 nav {
-  display: flex; 
+  display: flex;
   align-items: center;
   flex-wrap: wrap;
 }
 
 nav a {
-  text-decoration: none; 
-  color: #333;          
+  text-decoration: none;
+  color: #333;
   padding: 8px 12px;
   border-radius: 5px;
   transition: background 0.2s, color 0.2s;
   margin-left: 15px;
   font-size: 24px;
-  font-family: 'Zabava';     
+  font-family: "Zabava";
 }
 
 nav a:first-child {
-  margin-left: 0;       
+  margin-left: 0;
 }
 
 nav a:hover {
-  background-color: #F0E6D5;
+  background-color: #f0e6d5;
   color: #000000;
 }
 

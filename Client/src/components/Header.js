@@ -1,19 +1,19 @@
-import { Link } from 'react-router-dom';
-import logo from '../img/logo.png'
-import '../styles/header.css'
+import { Link } from "react-router-dom";
+import logo from "../img/logo.png";
+import "../styles/header.css";
 
 export default function Header() {
   return (
     <header>
-           <div className="header-top">
-             <div className="logo-container">
-                <img src={logo} alt="Логотип" className="logo" />
-                <div className="brand">
-                    <h1 className="brand-name">Граф Суворов</h1>
-                    <p className="slogan">Традиционная медовая палата</p>
-                </div>
-             </div>
-            </div>
+      <div className="header-top">
+        <div className="logo-container">
+          <img src={logo} alt="Логотип" className="logo" />
+          <div className="brand">
+            <h1 className="brand-name">Граф Суворов</h1>
+            <p className="slogan">Традиционная медовая палата</p>
+          </div>
+        </div>
+      </div>
 
       <nav>
         <Link to="/">Главная</Link>

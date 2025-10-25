@@ -35,7 +35,7 @@
 
 .service-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
 }
 
 .service-icon {
@@ -63,7 +63,6 @@
   font-size: 16px;
   color: #333;
 }
-
 
 @media (max-width: 900px) {
   .service-card {
