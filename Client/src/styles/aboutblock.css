@@ -3,13 +3,12 @@
   padding: 40px;
 }
 
-.text-welcom {
+h2 {
   color: azure;
   font-size: 48px;
   text-align: center;
   padding: 0px;
   margin: 0px;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .text {
@@ -41,4 +40,28 @@
 .button:hover {
   background-color: #780505;
   color: aliceblue;
+}
+
+
+
+.suvorov-histoty{
+  font-size: 48px;
+  font-weight: 700;
+  font-family: "TDDobruiYstav24";
+  color: #C70909;
+  margin-left: 40px;
+  margin-top: 220px;
+}
+
+.history-content{
+  font-size: 18px;
+  margin-left: 40px;
+}
+
+.img {
+  width: 40%;
+ float: right;
+ margin-right: 160px;
+ margin-top: -590px;
+ border: #d3a019 30px;
 }

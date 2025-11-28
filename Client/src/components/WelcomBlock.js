@@ -6,7 +6,7 @@ export default function WelcomBlock() {
   return (
     <section className="hero-context">
       <div>
-        <h2>
+        <h2 className="text-welcom">
           Добро пожаловать в мир русских <br /> традиций
         </h2>
         <p className="text">

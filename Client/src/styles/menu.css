@@ -1,0 +1,220 @@
+/* Существующие стили остаются + добавляем новые */
+
+.categories-filter {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.category-btn {
+  background: white;
+  border: 2px solid #780505;
+  color: #780505;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.category-btn.active,
+.category-btn:hover {
+  background: #780505;
+  color: white;
+}
+
+.admin-controls {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.add-item-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.add-item-btn:hover {
+  background: #218838;
+}
+
+/* Модальное окно */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content h3 {
+  color: #780505;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.modal-content textarea {
+  height: 80px;
+  resize: vertical;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.save-btn {
+  background: #780505;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Время приготовления */
+.preparation-time {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.item-image-container {
+  position: relative;
+}
+
+.item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.item-category {
+  color: #780505;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* Кнопки админа */
+.admin-actions {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 5px;
+}
+
+.edit-btn, .delete-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.edit-btn:hover {
+  background: #007bff;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #dc3545;
+  color: white;
+}
+
+.add-to-cart-btn {
+  width: 100%;
+  background: #780505;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+  background: #5a0404;
+}
+
+.loading, .empty-message {
+  text-align: center;
+  color: #780505;
+  font-size: 1.2rem;
+  margin: 40px 0;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .categories-filter {
+    gap: 5px;
+  }
+  
+  .category-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+  
+  .form-buttons {
+    flex-direction: column;
+  }
+}

@@ -1,24 +1,27 @@
-.hero-context {
-  background-color: #780505;
+.menu-block {
+  background-image: url(../img/background-menu-block.png);
   padding: 40px;
+  height: 420px;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.text-welcom {
+h2 {
   color: azure;
-  font-size: 48px;
   text-align: center;
   padding: 0px;
   margin: 0px;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: "TDDobruiYstav24";
+  font-size: 120px;
+  margin-top: 80px;
 }
 
 .text {
-  margin: 0px;
-  margin-top: 20px;
   font-size: 24px;
   color: #f5debd;
   text-align: center;
   padding: 0px;
+  margin: 0;
 }
 
 .hero-button {
