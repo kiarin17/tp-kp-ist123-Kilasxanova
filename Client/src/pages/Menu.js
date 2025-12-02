@@ -3,9 +3,8 @@ import '../styles/menu.css';
 import WelcomBlock from '../components/WelcomBlock';
 import axios from 'axios';
 
-// Импортируем изображения (замените на ваши реальные файлы)
+// Импортируем изображения
 import dish1Image from '../img/dish1Image.png';
-
 
 const Menu = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -23,6 +22,8 @@ const Menu = () => {
     price: '',
     categoryId: '',
     preparationTime: '',
+    weight: '', // Добавляем поле веса/порции
+    composition: '', // Добавляем поле состава
     imageUrl: ''
   });
 
@@ -67,14 +68,25 @@ const Menu = () => {
         ...formData,
         price: parseFloat(formData.price),
         categoryId: parseInt(formData.categoryId),
-        preparationTime: formData.preparationTime ? parseInt(formData.preparationTime) : null
+        preparationTime: formData.preparationTime ? parseInt(formData.preparationTime) : null,
+        weight: formData.weight || null,
+        composition: formData.composition || ''
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
       setShowAddForm(false);
-      setFormData({ name: '', description: '', price: '', categoryId: '', preparationTime: '', imageUrl: '' });
-      fetchMenuData(); // Обновляем список
+      setFormData({ 
+        name: '', 
+        description: '', 
+        price: '', 
+        categoryId: '', 
+        preparationTime: '', 
+        weight: '',
+        composition: '',
+        imageUrl: '' 
+      });
+      fetchMenuData();
     } catch (error) {
       console.error('Ошибка добавления:', error);
     }
@@ -88,6 +100,8 @@ const Menu = () => {
       price: item.price.toString(),
       categoryId: item.categoryId.toString(),
       preparationTime: item.preparationTime?.toString() || '',
+      weight: item.weight || '',
+      composition: item.composition || '',
       imageUrl: item.imageUrl || ''
     });
     setShowAddForm(true);
@@ -101,14 +115,25 @@ const Menu = () => {
         ...formData,
         price: parseFloat(formData.price),
         categoryId: parseInt(formData.categoryId),
-        preparationTime: formData.preparationTime ? parseInt(formData.preparationTime) : null
+        preparationTime: formData.preparationTime ? parseInt(formData.preparationTime) : null,
+        weight: formData.weight || null,
+        composition: formData.composition || ''
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
       setShowAddForm(false);
       setEditingItem(null);
-      setFormData({ name: '', description: '', price: '', categoryId: '', preparationTime: '', imageUrl: '' });
+      setFormData({ 
+        name: '', 
+        description: '', 
+        price: '', 
+        categoryId: '', 
+        preparationTime: '', 
+        weight: '',
+        composition: '',
+        imageUrl: '' 
+      });
       fetchMenuData();
     } catch (error) {
       console.error('Ошибка редактирования:', error);
@@ -127,6 +152,13 @@ const Menu = () => {
         console.error('Ошибка удаления:', error);
       }
     }
+  };
+
+  // Функция для добавления в корзину
+  const handleAddToCart = (item) => {
+    console.log('Добавлено в корзину:', item);
+    // Здесь будет логика добавления в корзину
+    alert(`${item.name} добавлен в корзину!`);
   };
 
   const filteredItems = selectedCategory 
@@ -158,7 +190,7 @@ const Menu = () => {
             className={`category-btn ${selectedCategory === null ? 'active' : ''}`}
             onClick={() => setSelectedCategory(null)}
           >
-            Все блюда
+            <span>Все блюда</span>
           </button>
           {categories.map(category => (
             <button
@@ -166,7 +198,7 @@ const Menu = () => {
               className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
               onClick={() => setSelectedCategory(category.id)}
             >
-              {category.name}
+              <span>{category.name}</span>
             </button>
           ))}
         </div>
@@ -178,11 +210,20 @@ const Menu = () => {
               className="add-item-btn"
               onClick={() => {
                 setEditingItem(null);
-                setFormData({ name: '', description: '', price: '', categoryId: '', preparationTime: '', imageUrl: '' });
+                setFormData({ 
+                  name: '', 
+                  description: '', 
+                  price: '', 
+                  categoryId: '', 
+                  preparationTime: '', 
+                  weight: '',
+                  composition: '',
+                  imageUrl: '' 
+                });
                 setShowAddForm(true);
               }}
             >
-              + Добавить блюдо
+              Добавить блюдо
             </button>
           </div>
         )}
@@ -206,13 +247,24 @@ const Menu = () => {
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
                   required
                 />
+                <textarea
+                  placeholder="Состав (через запятую)"
+                  value={formData.composition}
+                  onChange={(e) => setFormData({...formData, composition: e.target.value})}
+                />
                 <input
                   type="number"
-                  placeholder="Цена"
+                  placeholder="Цена (₽)"
                   value={formData.price}
                   onChange={(e) => setFormData({...formData, price: e.target.value})}
                   step="0.01"
                   required
+                />
+                <input
+                  type="text"
+                  placeholder="Вес/порция (например: 430г)"
+                  value={formData.weight}
+                  onChange={(e) => setFormData({...formData, weight: e.target.value})}
                 />
                 <select
                   value={formData.categoryId}
@@ -257,55 +309,76 @@ const Menu = () => {
         <div className="menu-items">
           {filteredItems.map(item => (
             <div key={item.id} className="menu-item">
-              <div className="item-content">
-                <div className="item-image-container">
-                  <img 
-                    src={item.imageUrl || dish1Image} // Запасное изображение
-                    alt={item.name}
-                    className="item-image"
-                  />
-                  {item.preparationTime && (
-                    <div className="preparation-time">
-                      ⏱ {item.preparationTime} мин
-                    </div>
-                  )}
+              {/* Кнопки админа */}
+              {isAdmin && (
+                <div className="admin-actions">
+                  <button 
+                    className="edit-btn"
+                    onClick={() => handleEditItem(item)}
+                    title="Редактировать"
+                  >
+                    ✏️
+                  </button>
+                  <button 
+                    className="delete-btn"
+                    onClick={() => handleDeleteItem(item.id)}
+                    title="Удалить"
+                  >
+                    🗑️
+                  </button>
                 </div>
-                <div className="item-details">
-                  <div className="item-header">
-                    <h3 className="item-name">{item.name}</h3>
-                    <p className="item-description">{item.description}</p>
-                  </div>
-                  <div className="item-footer">
-                    <span className="item-category">{item.categoryName}</span>
-                    <span className="item-price">{item.price} ₽</span>
-                  </div>
-                </div>
+              )}
 
-                {/* Кнопки админа */}
-                {isAdmin && (
-                  <div className="admin-actions">
-                    <button 
-                      className="edit-btn"
-                      onClick={() => handleEditItem(item)}
-                    >
-                      ✏️
-                    </button>
-                    <button 
-                      className="delete-btn"
-                      onClick={() => handleDeleteItem(item.id)}
-                    >
-                      🗑️
-                    </button>
+              {/* Изображение и бейджи */}
+              <div className="item-image-container">
+                <img 
+                  src={item.imageUrl || dish1Image}
+                  alt={item.name}
+                  className="item-image"
+                  onError={(e) => {
+                    e.target.src = dish1Image;
+                  }}
+                />
+                {item.preparationTime && (
+                  <div className="preparation-time">
+                    {item.preparationTime} мин
                   </div>
                 )}
-
-                {/* Кнопка корзины для клиентов */}
-                {!isAdmin && (
-                  <button className="add-to-cart-btn">
-                    В корзину
-                  </button>
+                {item.weight && (
+                  <div className="weight-badge">
+                    {item.weight}
+                  </div>
                 )}
               </div>
+
+              {/* Детали блюда */}
+              <div className="item-details">
+                <div className="item-header">
+                  <h3 className="item-name">{item.name}</h3>
+                  <p className="item-description">{item.description}</p>
+                  {item.composition && (
+                    <p className="item-composition">
+                      <strong>Состав:</strong> {item.composition}
+                    </p>
+                  )}
+                </div>
+                <div className="item-footer">
+                  <span className="item-category">
+                    {categories.find(c => c.id === item.categoryId)?.name || 'Без категории'}
+                  </span>
+                  <span className="item-price">{Math.round(item.price)}</span>
+                </div>
+              </div>
+
+              {/* Кнопка корзины для клиентов */}
+              {!isAdmin && (
+                <button 
+                  className="add-to-cart-btn"
+                  onClick={() => handleAddToCart(item)}
+                >
+                  В корзину
+                </button>
+              )}
             </div>
           ))}
         </div>
