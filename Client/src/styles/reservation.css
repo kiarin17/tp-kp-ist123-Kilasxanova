@@ -1,0 +1,695 @@
+@import url('https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&display=swap');
+
+:root {
+  --primary-red: #8B0000;
+  --dark-red: #660000;
+  --light-red: #A52A2A;
+  --accent-red: #CC3333;
+  --white: #FFFFFF;
+  --off-white: #F8F5F5;
+  --light-gray: #F0F0F0;
+  --medium-gray: #E0E0E0;
+  --dark-gray: #333333;
+  --text-dark: #222222;
+  --text-medium: #555555;
+  --text-light: #777777;
+  --shadow-light: rgba(139, 0, 0, 0.08);
+  --shadow-medium: rgba(139, 0, 0, 0.15);
+}
+
+.reservation-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 50px 30px;
+  background: var(--off-white);
+  min-height: 100vh;
+}
+
+.zabava-font {
+  font-family: 'Zilla Slab', serif;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.reservation-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.reservation-header h1 {
+  color: var(--primary-red);
+  font-size: 3rem;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 15px;
+}
+
+.reservation-header h1:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 3px;
+  background: linear-gradient(to right, transparent, var(--primary-red), transparent);
+}
+
+.reservation-content {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 50px;
+  align-items: start;
+}
+
+/* ===== СТИЛИ ФОРМЫ ===== */
+.reservation-form-section {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 15px 35px var(--shadow-light);
+  border: 1px solid var(--medium-gray);
+}
+
+.reservation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Поле ввода в одну строку */
+.form-field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Заголовок поля (иконка + label) */
+.form-field-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 5px;
+}
+
+.field-icon {
+  color: var(--primary-red);
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.field-label {
+  color: var(--dark-gray);
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+  letter-spacing: 0.5px;
+}
+
+/* Поля ввода */
+.form-input,
+.form-textarea,
+.form-input:focus,
+.form-textarea:focus {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid var(--medium-gray);
+  border-radius: 12px;
+  font-size: 16px;
+  background: var(--light-gray);
+  transition: all 0.3s ease;
+  font-family: inherit;
+  color: var(--text-dark);
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  border-color: var(--primary-red);
+  background: var(--white);
+  box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.1);
+  outline: none;
+}
+
+/* Текстовое поле */
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.5;
+}
+
+/* Стилизация select */
+.form-field-row select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%238B0000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  background-size: 18px;
+  padding-right: 50px;
+  cursor: pointer;
+}
+
+/* Двойная строка (почта+гости, дата+время) */
+.form-row-double {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.form-field-row.half {
+  width: 100%;
+}
+
+/* Кнопка отправки */
+.form-button-row {
+  margin-top: 10px;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--primary-red) 0%, var(--light-red) 100%);
+  color: var(--white);
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  box-shadow: 0 6px 20px rgba(139, 0, 0, 0.2);
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, var(--light-red) 0%, var(--dark-red) 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(139, 0, 0, 0.25);
+}
+
+.submit-btn:active {
+  transform: translateY(-1px);
+}
+
+.btn-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.btn-text {
+  font-family: 'Zilla Slab', serif;
+  font-weight: 700;
+}
+
+/* ===== БЛОКИ СПРАВА ===== */
+.reservation-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  position: sticky;
+  top: 30px;
+}
+
+.info-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 8px 25px var(--shadow-light);
+  border: 1px solid var(--medium-gray);
+  transition: transform 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+}
+
+.info-card h3 {
+  color: var(--primary-red);
+  margin: 0 0 20px 0;
+  font-size: 1.5rem;
+  border-bottom: 2px solid var(--light-gray);
+  padding-bottom: 12px;
+}
+
+/* Контакты */
+.contact-card {
+  background: linear-gradient(135deg, rgba(139, 0, 0, 0.03) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 16px;
+  background: var(--light-gray);
+  border-radius: 10px;
+  border-left: 4px solid var(--primary-red);
+  transition: all 0.3s ease;
+}
+
+.contact-item:hover {
+  background: rgba(139, 0, 0, 0.05);
+  border-left-color: var(--accent-red);
+}
+
+.contact-icon {
+  color: var(--primary-red);
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.contact-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contact-label {
+  color: var(--text-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.contact-value {
+  color: var(--text-medium);
+  font-size: 0.95rem;
+  font-family: monospace;
+}
+
+/* Процесс бронирования */
+.process-card {
+  background: linear-gradient(135deg, rgba(245, 240, 240, 0.8) 0%, var(--white) 100%);
+}
+
+.process-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.process-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.step-number {
+  background: var(--primary-red);
+  color: var(--white);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-family: 'Zilla Slab', serif;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  color: var(--dark-gray);
+  margin: 0 0 5px 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.step-content p {
+  color: var(--text-medium);
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Правила */
+.rules-card {
+  background: linear-gradient(135deg, rgba(240, 230, 230, 0.8) 0%, var(--white) 100%);
+}
+
+.rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rules-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  color: var(--text-dark);
+  font-size: 0.95rem;
+  position: relative;
+  padding-left: 24px;
+  line-height: 1.4;
+}
+
+.rules-list li:before {
+  content: "▶";
+  color: var(--primary-red);
+  font-size: 12px;
+  position: absolute;
+  left: 0;
+  top: 14px;
+}
+
+.rules-list li:last-child {
+  border-bottom: none;
+}
+
+/* Предупреждение */
+.warning-card {
+  background: linear-gradient(135deg, rgba(255, 230, 230, 0.9) 0%, var(--white) 100%);
+  border: 2px solid var(--accent-red);
+}
+
+.warning-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.warning-icon {
+  color: var(--accent-red);
+  width: 24px;
+  height: 24px;
+}
+
+.warning-card h3 {
+  color: var(--accent-red);
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.warning-text {
+  color: var(--dark-red);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  padding-left: 36px;
+}
+
+/* Тип бронирования - радиокнопки */
+.radio-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 12px 16px;
+  background: var(--light-gray);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 200px;
+}
+
+.radio-label:hover {
+  background: rgba(139, 0, 0, 0.05);
+  border-color: var(--medium-gray);
+}
+
+.radio-label:has(.radio-input:checked) {
+  background: rgba(139, 0, 0, 0.1);
+  border-color: var(--primary-red);
+}
+
+.radio-input {
+  display: none;
+}
+
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--medium-gray);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.radio-label:has(.radio-input:checked) .radio-custom {
+  border-color: var(--primary-red);
+  background: var(--primary-red);
+  box-shadow: inset 0 0 0 4px white;
+}
+
+.radio-text {
+  color: var(--text-dark);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Дополнительные услуги - чекбоксы */
+.services-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.service-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 15px;
+  background: var(--light-gray);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.service-checkbox-label:hover {
+  background: rgba(139, 0, 0, 0.05);
+  border-color: var(--medium-gray);
+}
+
+.service-checkbox-label:has(.service-checkbox:checked) {
+  background: rgba(139, 0, 0, 0.1);
+  border-color: var(--primary-red);
+}
+
+.service-checkbox {
+  display: none;
+}
+
+.checkbox-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--medium-gray);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.service-checkbox-label:has(.service-checkbox:checked) .checkbox-custom {
+  border-color: var(--primary-red);
+  background: var(--primary-red);
+}
+
+.service-checkbox-label:has(.service-checkbox:checked) .checkbox-custom:after {
+  content: '✓';
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.service-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.service-name {
+  color: var(--text-dark);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.service-price {
+  color: var(--primary-red);
+  font-weight: 700;
+  font-size: 0.9rem;
+  background: rgba(139, 0, 0, 0.1);
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.service-icon {
+  color: var(--primary-red);
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Виды дегустации */
+.tasting-types {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.tasting-type {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  background: rgba(139, 0, 0, 0.03);
+  border-radius: 10px;
+  border-left: 4px solid var(--primary-red);
+}
+
+.tasting-icon {
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.tasting-info h4 {
+  color: var(--dark-gray);
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.tasting-info p {
+  color: var(--text-medium);
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+
+/* Предупреждение с маркированным списком */
+.warning-text p {
+  margin: 8px 0;
+  padding-left: 10px;
+  position: relative;
+}
+
+.warning-text p:before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent-red);
+  font-weight: bold;
+}
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 1100px) {
+  .reservation-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .reservation-info-section {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .reservation-container {
+    padding: 30px 20px;
+  }
+  
+  .reservation-header h1 {
+    font-size: 2.2rem;
+  }
+  
+  .reservation-form-section {
+    padding: 30px;
+  }
+  
+  .form-row-double {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  
+  .info-card {
+    padding: 20px;
+  }
+  
+  .field-label {
+    font-size: 1.1rem;
+  }
+  
+  .radio-label {
+    min-width: 100%;
+  }
+  
+  .service-checkbox-label {
+    flex-wrap: wrap;
+  }
+  
+  .service-info {
+    width: 100%;
+    order: 1;
+    margin-top: 8px;
+  }
+  
+  .service-icon {
+    order: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .reservation-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .reservation-form-section {
+    padding: 20px;
+  }
+  
+  .form-input,
+  .form-textarea {
+    padding: 14px 16px;
+  }
+  
+  .submit-btn {
+    padding: 18px;
+    font-size: 1rem;
+  }
+  
+  .field-label {
+    font-size: 1rem;
+  }
+  
+  .contact-item {
+    padding: 12px;
+  }
+}

@@ -8,7 +8,6 @@ export default function Header() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Проверяем есть ли пользователь в localStorage при загрузке
     const userData = localStorage.getItem('user');
     if (userData) {
       setUser(JSON.parse(userData));
@@ -24,51 +23,85 @@ export default function Header() {
 
   return (
     <header>
-      <div className="header-top">
+      <div className="header-container">
+        {/* Логотип слева */}
         <div className="logo-container">
-          <img src={logo} alt="Логотип" className="logo" />
-          <div className="brand">
-            <h1 className="brand-name">Граф Суворов</h1>
-            <p className="slogan">Традиционная медовая палата</p>
-          </div>
+          <Link to="/" className="logo-link">
+            <img src={logo} alt="Логотип" className="logo" />
+            <div className="brand">
+              <h1 className="brand-name">Граф Суворов</h1>
+              <p className="slogan">Традиционная медовая палата</p>
+            </div>
+          </Link>
         </div>
 
-        {/* Блок пользователя */}
+        {/* Навигация по центру */}
+        <nav className="main-nav">
+          <Link to="/">Главная</Link>
+          <Link to="/menu">Меню</Link>
+          <Link to="/tasting">Дегустация</Link>
+          <Link to="/reservation">Бронирование</Link>
+          <Link to="/shop">Магазин</Link>
+          <Link to="/about">О нас</Link>
+          <Link to="/contact">Контакты</Link>
+        </nav>
+
+        {/* Блок пользователя справа */}
         <div className="user-section">
           {user ? (
             <div className="user-menu">
-              <span className="user-greeting">Привет, {user.firstName}</span>
-              <Link to="/profile" className="profile-link">Личный кабинет</Link>
+              <div className="user-info">
+                <span className="user-avatar">
+                  {user.firstName?.[0]}{user.lastName?.[0]}
+                </span>
+                <div className="user-details">
+                  <span className="user-name">{user.firstName}</span>
+                  <span className="user-role">
+                    {user.role === 'Admin' && 'Админ'}
+                    {user.role === 'Courier' && 'Курьер'}
+                    {user.role === 'Client' && 'Клиент'}
+                  </span>
+                </div>
+              </div>
               
-              {/* Ссылки для админа и курьера */}
-              {user.role === 'Admin' && (
-                <Link to="/admin" className="admin-link">Админ-панель</Link>
-              )}
-              {user.role === 'Courier' && (
-                <Link to="/courier" className="courier-link">Кабинет курьера</Link>
-              )}
-              
-              <button onClick={handleLogout} className="logout-btn">Выйти</button>
+              <div className="user-dropdown">
+                <Link to="/profile" className="dropdown-item">
+                  <span className="dropdown-icon">👤</span>
+                  Профиль
+                </Link>
+                
+                {user.role === 'Admin' && (
+                  <Link to="/admin" className="dropdown-item">
+                    <span className="dropdown-icon">⚙️</span>
+                    Админ-панель
+                  </Link>
+                )}
+                
+                {user.role === 'Courier' && (
+                  <Link to="/courier" className="dropdown-item">
+                    <span className="dropdown-icon">🚴</span>
+                    Курьер
+                  </Link>
+                )}
+                
+                <button onClick={handleLogout} className="dropdown-item logout">
+                  <span className="dropdown-icon">↪</span>
+                  Выйти
+                </button>
+              </div>
             </div>
           ) : (
-            <div className="auth-links">
-              <Link to="/login" className="login-link">Войти</Link>
-              <Link to="/register" className="register-link">Регистрация</Link>
+            <div className="auth-buttons">
+              <Link to="/login" className="login-btn">
+                Войти
+              </Link>
+              <Link to="/register" className="register-btn">
+                Регистрация
+              </Link>
             </div>
           )}
         </div>
       </div>
-
-      <nav>
-        <Link to="/">Главная</Link>
-        <Link to="/menu">Меню</Link>
-        <Link to="/tasting">Дегустация</Link>
-        <Link to="/reservation">Бронирование</Link>
-        <Link to="/shop">Магазин</Link>
-        <Link to="/about">О нас</Link>
-        <Link to="/contact">Контакты</Link>
-       
-      </nav>
     </header>
   );
 }
