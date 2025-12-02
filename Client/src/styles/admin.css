@@ -928,3 +928,216 @@
     gap: 12px;
   }
 }
+
+/* === ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ ЗАКАЗОВ === */
+
+/* Флажок кликабельности */
+.order-card {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.order-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(120, 5, 5, 0.15);
+  border-color: #ffcccc;
+}
+
+.order-card:active {
+  transform: translateY(-2px);
+}
+
+/* Бейдж статуса на карточке */
+.order-status {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.order-status::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.order-status:hover::after {
+  opacity: 1;
+}
+
+/* Стили для select элементов */
+.status-select, .courier-select, .filter-select {
+  padding: 10px 35px 10px 15px;
+  border: 2px solid #ffeaea;
+  border-radius: 10px;
+  background: white;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23780505' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+
+.status-select:focus, .courier-select:focus, .filter-select:focus {
+  outline: none;
+  border-color: #780505;
+  box-shadow: 0 0 0 3px rgba(120, 5, 5, 0.1);
+}
+
+.status-select:hover, .courier-select:hover, .filter-select:hover {
+  border-color: #ffcccc;
+}
+
+/* Кнопки действий в карточке заказа */
+.order-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.order-actions .courier-select {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Анимация загрузки */
+.loading-spinner.small {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(120, 5, 5, 0.3);
+  border-top-color: #780505;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Состояния карточек */
+.order-card.pending {
+  border-left: 4px solid #ff9800;
+}
+
+.order-card.confirmed {
+  border-left: 4px solid #2196f3;
+}
+
+.order-card.cooking {
+  border-left: 4px solid #ff5722;
+}
+
+.order-card.assigned {
+  border-left: 4px solid #9c27b0;
+}
+
+.order-card.delivered {
+  border-left: 4px solid #4caf50;
+}
+
+.order-card.cancelled {
+  border-left: 4px solid #f44336;
+  opacity: 0.8;
+}
+
+/* Стили для фильтров */
+.order-filters {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+/* Стили для таблицы пользователей */
+.user-row {
+  transition: background 0.3s ease;
+}
+
+.user-row:hover {
+  background: #ffebee;
+}
+
+.action-icon-btn {
+  transition: all 0.3s ease;
+}
+
+.action-icon-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+  .order-filters {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .filter-select {
+    width: 100%;
+  }
+  
+  .order-actions {
+    flex-direction: column;
+  }
+  
+  .order-actions .courier-select {
+    min-width: 100%;
+  }
+  
+  .order-details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .modal-actions button {
+    width: 100%;
+  }
+}
+
+/* === ИСПРАВЛЕНИЕ ХОВЕРА КАТЕГОРИЙ === */
+.category-btn {
+  position: relative;
+  overflow: visible;
+}
+
+.category-admin-actions {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.category-btn:hover .category-admin-actions {
+  opacity: 1;
+}
+
+/* Для активной категории */
+.category-btn.active .category-admin-actions {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.category-btn span {
+  display: inline-block;
+  padding-right: 60px; /* Место для кнопок */
+}
