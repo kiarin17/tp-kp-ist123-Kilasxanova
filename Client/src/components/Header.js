@@ -44,6 +44,7 @@ export default function Header() {
           <Link to="/shop">Магазин</Link>
           <Link to="/about">О нас</Link>
           <Link to="/contact">Контакты</Link>
+      
         </nav>
 
         {/* Блок пользователя справа */}
@@ -69,6 +70,23 @@ export default function Header() {
                   <span className="dropdown-icon">👤</span>
                   Профиль
                 </Link>
+                
+                {user.role === 'Client' && (
+                  <>
+                    <Link to="/client" className="dropdown-item">
+                      <span className="dropdown-icon">🍽️</span>
+                      Заказать еду
+                    </Link>
+                    <Link to="/client/orders" className="dropdown-item">
+                      <span className="dropdown-icon">📋</span>
+                      Мои заказы
+                    </Link>
+                    <Link to="/client/cart" className="dropdown-item">
+                      <span className="dropdown-icon">🛒</span>
+                      Корзина
+                    </Link>
+                  </>
+                )}
                 
                 {user.role === 'Admin' && (
                   <Link to="/admin" className="dropdown-item">

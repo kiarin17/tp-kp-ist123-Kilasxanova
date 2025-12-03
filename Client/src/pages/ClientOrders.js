@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { 
+  FaArrowLeft, 
+  FaShoppingBag, 
+  FaMapMarkerAlt, 
+  FaPhone, 
+  FaMoneyBillWave,
+  FaCreditCard,
+  FaClock,
+  FaHistory,
+  FaTimes,
+  FaCheck,
+  FaTruck,
+  FaHome
+} from 'react-icons/fa';
 
 const API_BASE_URL = 'http://localhost:5110/api';
 
@@ -26,16 +40,10 @@ const ClientOrders = () => {
     
     loadOrders();
     
-    // Автообновление каждые 30 секунд
-    const interval = setInterval(loadOrders, 30000);
-    
-    // Показываем сообщение об успешном заказе
     if (location.state?.message) {
       alert(location.state.message);
       window.history.replaceState({}, document.title);
     }
-    
-    return () => clearInterval(interval);
   }, [navigate, location]);
 
   const getAuthHeaders = () => {
@@ -51,19 +59,12 @@ const ClientOrders = () => {
   const loadOrders = async () => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/orders/my`,
+        `${API_BASE_URL}/client/ClientOrders/my`,
         getAuthHeaders()
       );
       
       const ordersData = Array.isArray(response.data) ? response.data : [];
       setOrders(ordersData);
-      
-      // Загружаем историю статусов для каждого заказа
-      for (const order of ordersData) {
-        if (['Pending', 'Confirmed', 'Cooking'].includes(order.status)) {
-          loadStatusHistory(order.id);
-        }
-      }
       
     } catch (error) {
       console.error('Ошибка загрузки заказов:', error);
@@ -75,7 +76,7 @@ const ClientOrders = () => {
   const loadStatusHistory = async (orderId) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/orders/${orderId}/status-history`,
+        `${API_BASE_URL}/client/ClientOrders/${orderId}/status-history`,
         getAuthHeaders()
       );
       
@@ -87,6 +88,7 @@ const ClientOrders = () => {
       console.error('Ошибка загрузки истории статусов:', error);
     }
   };
+
 
   const getStatusText = (status) => {
     const statusMap = {
@@ -139,7 +141,7 @@ const ClientOrders = () => {
     
     try {
       await axios.put(
-        `${API_BASE_URL}/orders/${orderId}/cancel`,
+        `${API_BASE_URL}/client/ClientOrders/${orderId}/cancel`,
         {},
         getAuthHeaders()
       );
@@ -153,23 +155,7 @@ const ClientOrders = () => {
   };
 
   const canCancelOrder = (order) => {
-    // Можно отменить только заказы в статусе "Ожидание" или "Подтвержден"
     return order.status === 'Pending' || order.status === 'Confirmed';
-  };
-
-  const getOrderProgress = (order) => {
-    const steps = [
-      { status: 'Pending', label: 'Ожидание', icon: '⏳' },
-      { status: 'Confirmed', label: 'Подтвержден', icon: '✅' },
-      { status: 'Cooking', label: 'Готовится', icon: '👨‍🍳' },
-      { status: 'AssignedToCourier', label: 'Курьер назначен', icon: '🚴' },
-      { status: 'OnTheWay', label: 'В пути', icon: '🛵' },
-      { status: 'Delivered', label: 'Доставлен', icon: '🏠' }
-    ];
-    
-    const currentStepIndex = steps.findIndex(step => step.status === order.status);
-    
-    return { steps, currentStepIndex };
   };
 
   if (!user) return null;
@@ -181,194 +167,182 @@ const ClientOrders = () => {
           style={styles.backButton}
           onClick={() => navigate('/client')}
         >
-          ← Назад в меню
+          <FaArrowLeft style={{ marginRight: '8px' }} />
+          Назад в меню
         </button>
-        <h1 style={styles.title}>Мои заказы</h1>
-        <button 
-          style={styles.refreshButton}
-          onClick={loadOrders}
-        >
-          🔄 Обновить
-        </button>
+        <h1 style={styles.title}>
+          <FaShoppingBag style={{ marginRight: '10px' }} />
+          Мои заказы
+        </h1>
+        <div style={{ width: '80px' }}></div>
       </div>
 
       {loading ? (
-        <div style={styles.loading}>
+        <div style={styles.loadingContainer}>
           <div style={styles.spinner}></div>
           <p>Загрузка заказов...</p>
         </div>
       ) : orders.length === 0 ? (
         <div style={styles.emptyOrders}>
-          <div style={styles.emptyIcon}>📋</div>
-          <h3>У вас еще нет заказов</h3>
-          <p>Сделайте свой первый заказ!</p>
+          <FaShoppingBag size={80} style={{ opacity: 0.3, marginBottom: '20px' }} />
+          <h3>Заказов пока нет</h3>
+          <p>Сделайте свой первый заказ из меню</p>
           <button 
-            style={styles.orderButton}
+            style={styles.menuButton}
             onClick={() => navigate('/client')}
           >
             Перейти в меню
           </button>
         </div>
       ) : (
-        <div style={styles.ordersList}>
-          {orders.map(order => {
-            const { steps, currentStepIndex } = getOrderProgress(order);
-            const history = statusHistory[order.id] || [];
-            
-            return (
+        <div style={styles.content}>
+          <div style={styles.ordersList}>
+            {orders.map(order => (
               <div key={order.id} style={styles.orderCard}>
                 <div style={styles.orderHeader}>
-                  <div style={styles.orderInfo}>
-                    <h3 style={styles.orderNumber}>
+                  <div style={styles.orderHeaderLeft}>
+                    <div style={styles.orderNumber}>
+                      <FaShoppingBag style={{ marginRight: '8px' }} />
                       Заказ #{order.id}
-                      {canCancelOrder(order) && (
-                        <button 
-                          style={styles.cancelOrderButton}
-                          onClick={() => cancelOrder(order.id)}
-                        >
-                          Отменить заказ
-                        </button>
-                      )}
-                    </h3>
-                    <div style={styles.orderMeta}>
-                      <span style={styles.orderDate}>
-                        📅 {formatDate(order.createdAt)}
-                      </span>
-                      <span style={styles.orderTotal}>
-                        💰 {formatCurrency(order.totalAmount)}
-                      </span>
-                      <span style={styles.orderAddress}>
-                        📍 {order.deliveryAddress || 'Самовывоз'}
-                      </span>
+                    </div>
+                    <div style={styles.orderDate}>
+                      {formatDate(order.createdAt)}
                     </div>
                   </div>
-                  
-                  <div style={styles.orderStatus}>
-                    <span 
+                  <div style={styles.orderHeaderRight}>
+                    <div 
                       style={{
                         ...styles.statusBadge,
-                        background: getStatusColor(order.status),
-                        color: 'white'
+                        backgroundColor: getStatusColor(order.status)
                       }}
                     >
-                      {getStatusText(order.status)}
-                    </span>
+                     
+                      <span style={{ marginLeft: '8px' }}>
+                        {getStatusText(order.status)}
+                      </span>
+                    </div>
+                    <div style={styles.orderTotal}>
+                      {formatCurrency(order.totalAmount)}
+                    </div>
                   </div>
                 </div>
-                
-                {/* Прогресс выполнения заказа */}
-                {currentStepIndex >= 0 && (
-                  <div style={styles.orderProgress}>
-                    <div style={styles.progressSteps}>
-                      {steps.map((step, index) => (
-                        <div 
-                          key={step.status}
-                          style={styles.progressStep}
-                        >
-                          <div 
-                            style={{
-                              ...styles.progressIcon,
-                              ...(index <= currentStepIndex ? styles.progressIconActive : {}),
-                              ...(index < currentStepIndex ? styles.progressIconCompleted : {})
-                            }}
-                          >
-                            {index < currentStepIndex ? '✓' : step.icon}
+
+                <div style={styles.orderInfo}>
+                  <div style={styles.infoRow}>
+                    <span style={styles.infoLabel}>
+                      <FaMapMarkerAlt style={{ marginRight: '8px' }} />
+                      Адрес доставки:
+                    </span>
+                    <span style={styles.infoValue}>
+                      {order.deliveryAddress || 'Самовывоз'}
+                    </span>
+                  </div>
+                  <div style={styles.infoRow}>
+                    <span style={styles.infoLabel}>
+                      <FaPhone style={{ marginRight: '8px' }} />
+                      Телефон:
+                    </span>
+                    <span style={styles.infoValue}>{order.customerPhone}</span>
+                  </div>
+                  <div style={styles.infoRow}>
+                    <span style={styles.infoLabel}>Способ оплаты:</span>
+                    <span style={styles.infoValue}>
+                      {order.paymentMethod === 'cash' ? (
+                        <><FaMoneyBillWave style={{ marginRight: '8px' }} />Наличные</>
+                      ) : (
+                        <><FaCreditCard style={{ marginRight: '8px' }} />Карта онлайн</>
+                      )}
+                    </span>
+                  </div>
+                  {order.specialInstructions && (
+                    <div style={styles.infoRow}>
+                      <span style={styles.infoLabel}>Пожелания:</span>
+                      <span style={styles.infoValue}>{order.specialInstructions}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div style={styles.orderItems}>
+                  <h4 style={styles.itemsTitle}>Состав заказа:</h4>
+                  {order.orderItems && order.orderItems.map((item, index) => (
+                    <div key={item.id || index} style={styles.orderItem}>
+                      <div style={styles.orderItemName}>
+                        <span style={styles.orderItemQuantity}>{item.quantity}×</span>
+                        {item.itemName}
+                      </div>
+                      <div style={styles.orderItemPrice}>
+                        {formatCurrency(item.unitPrice * item.quantity)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={styles.orderActions}>
+                  {canCancelOrder(order) && (
+                    <button 
+                      style={styles.cancelButton}
+                      onClick={() => cancelOrder(order.id)}
+                    >
+                      <FaTimes style={{ marginRight: '8px' }} />
+                      Отменить заказ
+                    </button>
+                  )}
+                  
+                  <button 
+                    style={styles.historyButton}
+                    onClick={() => {
+                      if (statusHistory[order.id]) {
+                        setStatusHistory(prev => ({
+                          ...prev,
+                          [order.id]: null
+                        }));
+                      } else {
+                        loadStatusHistory(order.id);
+                      }
+                    }}
+                  >
+                    <FaHistory style={{ marginRight: '8px' }} />
+                    {statusHistory[order.id] ? 'Скрыть историю' : 'Показать историю статусов'}
+                  </button>
+                </div>
+
+                {statusHistory[order.id] && statusHistory[order.id].length > 0 && (
+                  <div style={styles.statusHistory}>
+                    <h4 style={styles.historyTitle}>
+                      <FaHistory style={{ marginRight: '8px' }} />
+                      История изменений:
+                    </h4>
+                    <div style={styles.historyList}>
+                      {statusHistory[order.id].map((history, idx) => (
+                        <div key={history.id || idx} style={styles.historyItem}>
+                          <div style={styles.historyLeft}>
+                            <div style={styles.historyStatus}>
+                              <div 
+                                style={{
+                                  ...styles.historyStatusDot,
+                                  backgroundColor: getStatusColor(history.status)
+                                }}
+                              />
+                          
+                              <span style={{ marginLeft: '8px' }}>
+                                {getStatusText(history.status)}
+                              </span>
+                            </div>
+                            <div style={styles.historyNotes}>
+                              {history.notes}
+                            </div>
                           </div>
-                          <span 
-                            style={{
-                              ...styles.progressLabel,
-                              ...(index <= currentStepIndex ? styles.progressLabelActive : {})
-                            }}
-                          >
-                            {step.label}
-                          </span>
-                          {index < steps.length - 1 && (
-                            <div 
-                              style={{
-                                ...styles.progressLine,
-                                ...(index < currentStepIndex ? styles.progressLineActive : {})
-                              }}
-                            />
-                          )}
+                          <div style={styles.historyDate}>
+                            {formatDate(history.createdAt)}
+                          </div>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
-                
-                <div style={styles.orderDetails}>
-                  <div style={styles.orderSection}>
-                    <h4 style={styles.sectionTitle}>Состав заказа:</h4>
-                    <div style={styles.itemsList}>
-                      {order.orderItems && order.orderItems.length > 0 ? (
-                        order.orderItems.map((item, index) => (
-                          <div key={index} style={styles.orderItem}>
-                            <span style={styles.itemName}>
-                              {item.itemName}
-                            </span>
-                            <span style={styles.itemQuantity}>
-                              × {item.quantity}
-                            </span>
-                            <span style={styles.itemPrice}>
-                              {formatCurrency(item.unitPrice * item.quantity)}
-                            </span>
-                          </div>
-                        ))
-                      ) : (
-                        <p>Информация о товарах недоступна</p>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {order.specialInstructions && (
-                    <div style={styles.orderSection}>
-                      <h4 style={styles.sectionTitle}>Особые пожелания:</h4>
-                      <p style={styles.specialInstructions}>{order.specialInstructions}</p>
-                    </div>
-                  )}
-                  
-                  {history.length > 0 && (
-                    <div style={styles.orderSection}>
-                      <h4 style={styles.sectionTitle}>История статусов:</h4>
-                      <div style={styles.statusHistory}>
-                        {history.map((record, index) => (
-                          <div key={index} style={styles.statusRecord}>
-                            <div style={styles.statusRecordHeader}>
-                              <span style={styles.statusRecordStatus}>
-                                {getStatusText(record.status)}
-                              </span>
-                              <span style={styles.statusRecordDate}>
-                                {formatDate(record.createdAt)}
-                              </span>
-                            </div>
-                            {record.notes && (
-                              <p style={styles.statusRecordNotes}>📝 {record.notes}</p>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                
-                {order.estimatedDeliveryTime && (
-                  <div style={styles.deliveryInfo}>
-                    <div style={styles.deliveryTime}>
-                      <strong>⏰ Примерное время доставки:</strong> {formatDate(order.estimatedDeliveryTime)}
-                    </div>
-                  </div>
-                )}
-                
-                {order.assignedCourierId && (
-                  <div style={styles.courierInfo}>
-                    <div style={styles.courierBadge}>
-                      🚴 Курьер назначен
-                    </div>
-                  </div>
-                )}
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       )}
     </div>
@@ -390,6 +364,7 @@ const styles = {
     position: 'sticky',
     top: 0,
     zIndex: 100,
+    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
   },
   backButton: {
     background: 'transparent',
@@ -399,28 +374,23 @@ const styles = {
     cursor: 'pointer',
     padding: '10px',
     borderRadius: '8px',
-    transition: 'background 0.3s ease',
+    display: 'flex',
+    alignItems: 'center',
   },
   title: {
     margin: 0,
     fontSize: '24px',
     fontWeight: 'bold',
+    display: 'flex',
+    alignItems: 'center',
   },
-  refreshButton: {
-    background: 'rgba(255,255,255,0.2)',
-    color: 'white',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    fontSize: '14px',
-  },
-  loading: {
+  loadingContainer: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '80px 20px',
+    padding: '100px 20px',
+    textAlign: 'center',
   },
   spinner: {
     width: '50px',
@@ -439,12 +409,7 @@ const styles = {
     padding: '80px 20px',
     textAlign: 'center',
   },
-  emptyIcon: {
-    fontSize: '80px',
-    marginBottom: '20px',
-    opacity: 0.3,
-  },
-  orderButton: {
+  menuButton: {
     background: '#780505',
     color: 'white',
     border: 'none',
@@ -454,272 +419,219 @@ const styles = {
     cursor: 'pointer',
     marginTop: '20px',
   },
-  ordersList: {
-    padding: '40px',
+  content: {
     maxWidth: '1200px',
     margin: '0 auto',
+    padding: '40px 20px',
+  },
+  ordersList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '30px',
   },
   orderCard: {
     background: 'white',
     borderRadius: '15px',
     padding: '30px',
-    marginBottom: '30px',
-    boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
-    borderLeft: '5px solid #780505',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
   },
   orderHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     marginBottom: '25px',
-    paddingBottom: '25px',
-    borderBottom: '1px solid #f0f0f0',
+    paddingBottom: '20px',
+    borderBottom: '2px solid #f0f0f0',
   },
-  orderInfo: {
-    flex: 1,
+  orderHeaderLeft: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
   },
   orderNumber: {
-    margin: '0 0 15px 0',
-    fontSize: '22px',
+    fontSize: '20px',
+    fontWeight: 'bold',
     color: '#333',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    gap: '20px',
   },
-  cancelOrderButton: {
-    background: 'transparent',
-    color: '#f44336',
-    border: '1px solid #f44336',
-    padding: '8px 20px',
-    borderRadius: '6px',
-    fontSize: '14px',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-  },
-  orderMeta: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '20px',
+  orderDate: {
     fontSize: '14px',
     color: '#666',
   },
-  orderDate: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
-  orderTotal: {
-    fontWeight: 'bold',
-    color: '#780505',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
-  orderAddress: {
-    maxWidth: '300px',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
-  orderStatus: {
+  orderHeaderRight: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    gap: '10px',
   },
   statusBadge: {
-    padding: '10px 20px',
+    padding: '8px 16px',
     borderRadius: '50px',
     fontSize: '14px',
     fontWeight: 'bold',
-    textTransform: 'uppercase',
-    minWidth: '150px',
-    textAlign: 'center',
-  },
-  orderProgress: {
-    marginBottom: '30px',
-    padding: '20px',
-    background: '#f9f9f9',
-    borderRadius: '10px',
-  },
-  progressSteps: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    position: 'relative',
-  },
-  progressStep: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    flex: 1,
-    position: 'relative',
-  },
-  progressIcon: {
-    width: '40px',
-    height: '40px',
-    borderRadius: '50%',
-    background: '#e0e0e0',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '18px',
-    marginBottom: '10px',
-    zIndex: 2,
-  },
-  progressIconActive: {
-    background: '#780505',
     color: 'white',
+    display: 'flex',
+    alignItems: 'center',
   },
-  progressIconCompleted: {
-    background: '#4caf50',
-    color: 'white',
-  },
-  progressLabel: {
-    fontSize: '12px',
-    color: '#999',
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-  progressLabelActive: {
-    color: '#333',
+  orderTotal: {
+    fontSize: '24px',
     fontWeight: 'bold',
+    color: '#780505',
   },
-  progressLine: {
-    position: 'absolute',
-    top: '20px',
-    left: '70%',
-    right: '-30%',
-    height: '2px',
-    background: '#e0e0e0',
-    zIndex: 1,
+  orderInfo: {
+    marginBottom: '25px',
+    paddingBottom: '20px',
+    borderBottom: '1px solid #f0f0f0',
   },
-  progressLineActive: {
-    background: '#4caf50',
+  infoRow: {
+    display: 'flex',
+    marginBottom: '12px',
+    fontSize: '14px',
   },
-  orderDetails: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '30px',
+  infoLabel: {
+    fontWeight: '600',
+    color: '#666',
+    minWidth: '150px',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  infoValue: {
+    color: '#333',
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  orderItems: {
     marginBottom: '25px',
   },
-  orderSection: {
-    marginBottom: '20px',
-  },
-  sectionTitle: {
+  itemsTitle: {
     margin: '0 0 15px 0',
     fontSize: '16px',
     color: '#333',
-    borderBottom: '1px solid #f0f0f0',
-    paddingBottom: '8px',
-  },
-  itemsList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '12px',
   },
   orderItem: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
     padding: '12px 0',
     borderBottom: '1px dashed #f0f0f0',
   },
-  itemName: {
-    flex: 1,
-    fontSize: '14px',
+  orderItemName: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    color: '#333',
   },
-  itemQuantity: {
-    margin: '0 20px',
-    color: '#666',
-    fontSize: '14px',
+  orderItemQuantity: {
+    background: '#f0f0f0',
+    padding: '2px 8px',
+    borderRadius: '4px',
+    fontSize: '12px',
+    fontWeight: 'bold',
   },
-  itemPrice: {
+  orderItemPrice: {
     fontWeight: 'bold',
     color: '#780505',
-    minWidth: '100px',
-    textAlign: 'right',
-    fontSize: '14px',
   },
-  specialInstructions: {
-    background: '#f9f9f9',
-    padding: '15px',
+  orderActions: {
+    display: 'flex',
+    gap: '15px',
+    marginTop: '30px',
+    paddingTop: '20px',
+    borderTop: '2px solid #f0f0f0',
+  },
+  cancelButton: {
+    background: 'transparent',
+    color: '#ff4444',
+    border: '2px solid #ff4444',
+    padding: '12px 24px',
     borderRadius: '8px',
     fontSize: '14px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  historyButton: {
+    background: 'transparent',
     color: '#666',
-    lineHeight: 1.5,
+    border: '2px solid #ddd',
+    padding: '12px 24px',
+    borderRadius: '8px',
+    fontSize: '14px',
+    fontWeight: 'bold',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
   },
   statusHistory: {
+    marginTop: '25px',
+    padding: '20px',
+    background: '#f9f9f9',
+    borderRadius: '10px',
+    border: '1px solid #eee',
+  },
+  historyTitle: {
+    margin: '0 0 15px 0',
+    fontSize: '16px',
+    color: '#333',
+    display: 'flex',
+    alignItems: 'center',
+  },
+  historyList: {
     display: 'flex',
     flexDirection: 'column',
     gap: '15px',
-    maxHeight: '200px',
-    overflowY: 'auto',
   },
-  statusRecord: {
-    background: '#f5f5f5',
-    padding: '15px',
-    borderRadius: '8px',
-    borderLeft: '3px solid #780505',
-  },
-  statusRecordHeader: {
+  historyItem: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '8px',
-  },
-  statusRecordStatus: {
-    fontWeight: 'bold',
-    fontSize: '14px',
-    color: '#333',
-  },
-  statusRecordDate: {
-    fontSize: '12px',
-    color: '#666',
-  },
-  statusRecordNotes: {
-    margin: 0,
-    fontSize: '13px',
-    color: '#666',
-  },
-  deliveryInfo: {
-    marginTop: '20px',
+    alignItems: 'flex-start',
     padding: '15px',
-    background: '#e3f2fd',
-    borderRadius: '10px',
-    border: '1px solid #bbdefb',
+    background: 'white',
+    borderRadius: '8px',
+    border: '1px solid #eee',
   },
-  deliveryTime: {
+  historyLeft: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+    flex: 1,
+  },
+  historyStatus: {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
-    fontSize: '14px',
-    color: '#0d47a1',
-  },
-  courierInfo: {
-    marginTop: '15px',
-  },
-  courierBadge: {
-    display: 'inline-block',
-    background: '#e1bee7',
-    color: '#4a148c',
-    padding: '8px 16px',
-    borderRadius: '20px',
-    fontSize: '14px',
     fontWeight: 'bold',
+    color: '#333',
+  },
+  historyStatusDot: {
+    width: '10px',
+    height: '10px',
+    borderRadius: '50%',
+  },
+  historyNotes: {
+    fontSize: '14px',
+    color: '#666',
+    fontStyle: 'italic',
+  },
+  historyDate: {
+    fontSize: '12px',
+    color: '#999',
+    whiteSpace: 'nowrap',
   },
 };
 
 // Добавляем анимацию спиннера
-const styleSheet = document.styleSheets[0];
-styleSheet.insertRule(`
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-`, styleSheet.cssRules.length);
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+  document.head.appendChild(style);
+}
 
 export default ClientOrders;

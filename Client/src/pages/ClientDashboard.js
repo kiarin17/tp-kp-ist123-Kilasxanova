@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import '../styles/clientDashboard.css';
 
 const API_BASE_URL = 'http://localhost:5110/api';
 
@@ -10,89 +11,208 @@ const ClientDashboard = () => {
   const [categories, setCategories] = useState([]);
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [menuLoading, setMenuLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Проверка авторизации и загрузка данных
   useEffect(() => {
-    const userData = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-    
-    if (!userData || !token) {
+    const checkAuthAndLoad = async () => {
+      const userData = localStorage.getItem('user');
+      const token = localStorage.getItem('token');
+      
+      if (!userData || !token) {
+        navigate('/login');
+        return;
+      }
+
+      try {
+        const userObj = JSON.parse(userData);
+        
+        if (userObj.role === 'Admin') {
+          navigate('/admin');
+          return;
+        } else if (userObj.role === 'Courier') {
+          navigate('/courier');
+          return;
+        }
+        
+        setUser(userObj);
+        
+        // Загружаем корзину
+        const cartKey = `cart_${userObj.id}`;
+        const savedCart = localStorage.getItem(cartKey);
+        
+        if (savedCart) {
+          try {
+            const cartData = JSON.parse(savedCart);
+            setCart(cartData);
+          } catch (error) {
+            console.error('Ошибка парсинга корзины:', error);
+            setCart([]);
+          }
+        } else {
+          setCart([]);
+        }
+        
+        // Загружаем меню
+        await loadMenu(token);
+        
+      } catch (error) {
+        console.error('Ошибка инициализации:', error);
+        setError('Ошибка загрузки данных');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuthAndLoad();
+  }, [navigate]);
+
+  // Загрузка меню
+  const loadMenu = async (token) => {
+    try {
+      setMenuLoading(true);
+      setError('');
+      
+      const headers = token ? {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      } : {
+        'Content-Type': 'application/json'
+      };
+      
+      // Загружаем категории
+      const categoriesRes = await axios.get(`${API_BASE_URL}/menu/categories`, { headers });
+      setCategories(categoriesRes.data || []);
+      
+      // Загружаем товары
+      let itemsRes;
+      try {
+        itemsRes = await axios.get(`${API_BASE_URL}/menu/items`, { headers });
+      } catch (error) {
+        try {
+          itemsRes = await axios.get(`${API_BASE_URL}/menu/available-items`, { headers });
+        } catch (error2) {
+          itemsRes = await axios.get(`${API_BASE_URL}/menu/items`);
+        }
+      }
+      
+      console.log('Загруженные товары:', itemsRes.data);
+      setMenuItems(itemsRes.data || []);
+      
+    } catch (error) {
+      console.error('Ошибка загрузки меню:', error);
+      
+      if (error.response?.status === 403 || error.response?.status === 401) {
+        setError('Ошибка авторизации. Пожалуйста, войдите снова.');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        navigate('/login');
+      } else {
+        setError('Ошибка загрузки меню. Попробуйте обновить страницу.');
+      }
+      
+      setMenuItems([]);
+    } finally {
+      setMenuLoading(false);
+    }
+  };
+
+  // Обновление корзины в localStorage
+  useEffect(() => {
+    if (user?.id) {
+      const cartKey = `cart_${user.id}`;
+      localStorage.setItem(cartKey, JSON.stringify(cart));
+    }
+  }, [cart, user]);
+
+  // Функция добавления в корзину
+  const addToCart = (item) => {
+    if (!user || !user.id) {
+      alert('Пожалуйста, войдите в систему для добавления в корзину');
       navigate('/login');
       return;
     }
 
-    const userObj = JSON.parse(userData);
-    if (userObj.role !== 'Client') {
-      navigate('/admin');
+    if (!item || !item.id) {
+      alert('Ошибка: неверный товар');
       return;
     }
 
-    setUser(userObj);
-    loadMenu();
-    
-    // Загружаем корзину из localStorage
-    const savedCart = localStorage.getItem(`cart_${userObj.id}`);
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
-    }
-  }, [navigate]);
-
-  const getAuthHeaders = () => {
-    const token = localStorage.getItem('token');
-    return {
-      headers: { 
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+    // Создаем новый элемент для корзины
+    const cartItem = {
+      id: item.id,
+      name: item.name || 'Без названия',
+      description: item.description || '',
+      price: item.price || 0,
+      imageUrl: item.imageUrl || '',
+      categoryName: item.categoryName || '',
+      quantity: 1
     };
-  };
 
-  const loadMenu = async () => {
-    try {
-      setLoading(true);
-      
-      // Загружаем категории
-      const categoriesRes = await axios.get(`${API_BASE_URL}/menu/categories`);
-      setCategories(categoriesRes.data || []);
-      
-      // Загружаем доступные товары
-      const itemsRes = await axios.get(`${API_BASE_URL}/menu/items`);
-      const availableItems = (itemsRes.data || []).filter(item => item.isAvailable);
-      setMenuItems(availableItems);
-      
-    } catch (error) {
-      console.error('Ошибка загрузки меню:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const addToCart = (item) => {
-    const newCart = [...cart];
-    const existingItemIndex = newCart.findIndex(cartItem => cartItem.id === item.id);
+    // Ищем товар в корзине
+    const existingItemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
     
+    let newCart;
     if (existingItemIndex >= 0) {
+      newCart = [...cart];
       newCart[existingItemIndex].quantity += 1;
     } else {
-      newCart.push({
-        id: item.id,
-        name: item.name,
-        description: item.description,
-        price: item.price,
-        imageUrl: item.imageUrl,
-        quantity: 1
-      });
+      newCart = [...cart, cartItem];
     }
     
     setCart(newCart);
-    localStorage.setItem(`cart_${user.id}`, JSON.stringify(newCart));
+    showNotification(`${item.name} добавлен в корзину!`);
+  };
+
+  const showNotification = (message) => {
+    // Удаляем старые уведомления
+    const oldNotifications = document.querySelectorAll('.notification');
+    oldNotifications.forEach(notification => notification.remove());
+
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.style.cssText = `
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      z-index: 1000;
+      font-weight: bold;
+      animation: slideIn 0.3s ease-out;
+      max-width: 300px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    `;
+    
+    notification.innerHTML = `
+      <div style="font-size: 20px; background: white; color: #2E7D32; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">✓</div>
+      <div>${message}</div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.style.animation = 'slideOut 0.3s ease-in';
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300);
+    }, 3000);
   };
 
   const removeFromCart = (itemId) => {
     const newCart = cart.filter(item => item.id !== itemId);
     setCart(newCart);
-    localStorage.setItem(`cart_${user.id}`, JSON.stringify(newCart));
+    showNotification('Товар удален из корзины');
   };
 
   const updateQuantity = (itemId, newQuantity) => {
@@ -106,11 +226,14 @@ const ClientDashboard = () => {
     );
     
     setCart(newCart);
-    localStorage.setItem(`cart_${user.id}`, JSON.stringify(newCart));
   };
 
   const getTotal = () => {
     return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  };
+
+  const getTotalItems = () => {
+    return cart.reduce((sum, item) => sum + item.quantity, 0);
   };
 
   const filteredItems = activeCategory === 'all' 
@@ -119,391 +242,244 @@ const ClientDashboard = () => {
 
   if (loading) {
     return (
-      <div style={styles.loadingContainer}>
-        <div style={styles.spinner}></div>
-        <p>Загрузка меню...</p>
+      <div className="loading-container">
+        <div className="spinner">
+          <div className="spinner-icon"></div>
+        </div>
+        <p>Загрузка панели...</p>
       </div>
     );
   }
 
+  if (!user) {
+    return null;
+  }
+
   return (
-    <div style={styles.container}>
-      {/* Шапка */}
-      <div style={styles.header}>
-        <div style={styles.headerLeft}>
-          <h1 style={styles.logo}>🍕 Доставка еды</h1>
-          <div style={styles.userInfo}>
-            <span style={styles.userName}>{user?.firstName} {user?.lastName}</span>
-            <span style={styles.userEmail}>{user?.email}</span>
-          </div>
-        </div>
-        
-        <div style={styles.headerRight}>
+    <div className="client-container">
+      {/* Сообщение об ошибке */}
+      {error && (
+        <div className="error-banner">
+          <span className="error-icon">!</span>
+          {error}
           <button 
-            style={styles.cartButton}
-            onClick={() => navigate('/client/cart')}
-          >
-            🛒 Корзина
-            {cart.length > 0 && (
-              <span style={styles.cartBadge}>{cart.length}</span>
-            )}
-          </button>
-          
-          <button 
-            style={styles.ordersButton}
-            onClick={() => navigate('/client/orders')}
-          >
-            📋 Мои заказы
-          </button>
-          
-          <button 
-            style={styles.logoutButton}
             onClick={() => {
-              localStorage.removeItem('token');
-              localStorage.removeItem('user');
-              navigate('/login');
+              const token = localStorage.getItem('token');
+              if (token) loadMenu(token);
             }}
+            className="retry-button"
           >
-            Выйти
+            Повторить
           </button>
         </div>
-      </div>
+      )}
 
       {/* Категории */}
-      <div style={styles.categories}>
-        <button
-          style={{
-            ...styles.categoryButton,
-            ...(activeCategory === 'all' ? styles.categoryButtonActive : {})
-          }}
-          onClick={() => setActiveCategory('all')}
-        >
-          Все
-        </button>
-        
-        {categories.map(category => (
+      <div className="categories-container">
+        <div className="categories-list">
           <button
-            key={category.id}
-            style={{
-              ...styles.categoryButton,
-              ...(activeCategory === category.id.toString() ? styles.categoryButtonActive : {})
-            }}
-            onClick={() => setActiveCategory(category.id.toString())}
+            className={`category-button ${activeCategory === 'all' ? 'active' : ''}`}
+            onClick={() => setActiveCategory('all')}
           >
-            {category.name}
+            Все
           </button>
-        ))}
+          
+          {categories.map(category => (
+            <button
+              key={category.id}
+              className={`category-button ${activeCategory === category.id.toString() ? 'active' : ''}`}
+              onClick={() => setActiveCategory(category.id.toString())}
+            >
+              {category.name}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Меню */}
-      <div style={styles.menuGrid}>
-        {filteredItems.map(item => (
-          <div key={item.id} style={styles.menuItem}>
-            <div style={styles.itemImage}>
-              {item.imageUrl ? (
-                <img src={item.imageUrl} alt={item.name} style={styles.image} />
-              ) : (
-                <div style={styles.imagePlaceholder}>
-                  {item.name?.charAt(0)}
-                </div>
-              )}
-              {item.isPopular && (
-                <div style={styles.popularBadge}>🔥 Популярное</div>
-              )}
-            </div>
-            
-            <div style={styles.itemInfo}>
-              <h3 style={styles.itemName}>{item.name}</h3>
-              <p style={styles.itemDescription}>
-                {item.description || 'Описание отсутствует'}
-              </p>
-              
-              {item.composition && (
-                <div style={styles.composition}>
-                  <small>Состав: {item.composition}</small>
-                </div>
-              )}
-              
-              <div style={styles.itemBottom}>
-                <div>
-                  <span style={styles.itemPrice}>
-                    {item.price} ₽
-                  </span>
-                  {item.weight && (
-                    <span style={styles.itemWeight}> • {item.weight}г</span>
-                  )}
-                </div>
+      {/* Основной контент */}
+      <div className="client-content">
+        {/* Загрузка меню */}
+        {menuLoading ? (
+          <div className="loading-menu">
+            <div className="spinner-icon large"></div>
+            <p>Загрузка меню...</p>
+          </div>
+        ) : (
+          /* Меню */
+          <div className="menu-grid">
+            {filteredItems.length === 0 ? (
+              <div className="empty-menu">
+                <div className="empty-menu-icon">🍽️</div>
+                <h3>Нет доступных товаров</h3>
+                <p>Попробуйте обновить страницу или выберите другую категорию</p>
                 <button 
-                  style={styles.addButton}
-                  onClick={() => addToCart(item)}
+                  className="refresh-button"
+                  onClick={() => {
+                    const token = localStorage.getItem('token');
+                    if (token) loadMenu(token);
+                  }}
                 >
-                  Добавить
+                  Обновить меню
                 </button>
               </div>
-            </div>
+            ) : (
+              filteredItems.map(item => {
+                return (
+                  <div key={item.id} className="menu-item">
+                    <div className="item-image">
+                      {item.imageUrl ? (
+                        <img src={item.imageUrl} alt={item.name} />
+                      ) : (
+                        <div className="image-placeholder">
+                          <span className="placeholder-text">ФОТО</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="item-info">
+                      <h3 className="item-name">{item.name}</h3>
+                      <p className="item-description">
+                        {item.description || 'Описание отсутствует'}
+                      </p>
+                      
+                      {item.composition && (
+                        <div className="composition">
+                          <small>Состав: {item.composition}</small>
+                        </div>
+                      )}
+                      
+                      <div className="item-bottom">
+                        <div>
+                          <span className="item-price">
+                            {item.price || 0} ₽
+                          </span>
+                          {item.weight && (
+                            <span className="item-weight"> • {item.weight}г</span>
+                          )}
+                        </div>
+                        <button 
+                          className="add-button"
+                          onClick={() => addToCart(item)}
+                          disabled={item.isAvailable === false}
+                          title={item.isAvailable === false ? 'Нет в наличии' : 'Добавить в корзину'}
+                        >
+                          {item.isAvailable === false ? 'Нет в наличии' : 'Добавить'}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
-        ))}
+        )}
       </div>
 
-      {/* Плавающая кнопка корзины для мобильных */}
+      {/* Плавающая кнопка корзины */}
       {cart.length > 0 && (
         <button 
-          style={styles.floatingCartButton}
+          className="floating-cart-button"
           onClick={() => navigate('/client/cart')}
         >
-          🛒 {cart.length} товаров • {getTotal()} ₽
+          <span className="cart-icon">🛒</span>
+          {getTotalItems()} товаров • {getTotal()} ₽
         </button>
       )}
     </div>
   );
 };
 
-const styles = {
-  container: {
-    minHeight: '100vh',
-    background: '#f5f5f5',
-  },
-  loadingContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh',
-  },
-  spinner: {
-    width: '50px',
-    height: '50px',
-    border: '3px solid #f3f3f3',
-    borderTop: '3px solid #780505',
-    borderRadius: '50%',
-    animation: 'spin 1s linear infinite',
-  },
-  header: {
-    background: 'linear-gradient(135deg, #780505 0%, #a50606 100%)',
-    color: 'white',
-    padding: '20px 40px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-  },
-  headerLeft: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '30px',
-  },
-  logo: {
-    margin: 0,
-    fontSize: '28px',
-    fontWeight: 'bold',
-  },
-  userInfo: {
-    display: 'flex',
-    flexDirection: 'column',
-    fontSize: '14px',
-  },
-  userName: {
-    fontWeight: 'bold',
-  },
-  userEmail: {
-    opacity: 0.8,
-  },
-  headerRight: {
-    display: 'flex',
-    gap: '15px',
-    alignItems: 'center',
-  },
-  cartButton: {
-    background: 'white',
-    color: '#780505',
-    border: 'none',
-    padding: '12px 24px',
-    borderRadius: '50px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    position: 'relative',
-    transition: 'all 0.3s ease',
-  },
-  cartBadge: {
-    background: '#ff4444',
-    color: 'white',
-    borderRadius: '50%',
-    width: '24px',
-    height: '24px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '12px',
-    position: 'absolute',
-    top: '-8px',
-    right: '-8px',
-  },
-  ordersButton: {
-    background: 'transparent',
-    color: 'white',
-    border: '2px solid white',
-    padding: '10px 20px',
-    borderRadius: '50px',
-    fontSize: '16px',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-  },
-  logoutButton: {
-    background: 'transparent',
-    color: 'white',
-    border: 'none',
-    padding: '10px 20px',
-    fontSize: '16px',
-    cursor: 'pointer',
-    opacity: 0.8,
-  },
-  categories: {
-    display: 'flex',
-    gap: '10px',
-    padding: '20px 40px',
-    background: 'white',
-    overflowX: 'auto',
-    borderBottom: '1px solid #eee',
-  },
-  categoryButton: {
-    padding: '12px 24px',
-    border: '1px solid #ddd',
-    background: 'white',
-    borderRadius: '50px',
-    cursor: 'pointer',
-    whiteSpace: 'nowrap',
-    fontSize: '14px',
-    transition: 'all 0.3s ease',
-  },
-  categoryButtonActive: {
-    background: '#780505',
-    color: 'white',
-    borderColor: '#780505',
-  },
-  menuGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-    gap: '30px',
-    padding: '40px',
-  },
-  menuItem: {
-    background: 'white',
-    borderRadius: '15px',
-    overflow: 'hidden',
-    boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-    transition: 'transform 0.3s ease',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  itemImage: {
-    height: '180px',
-    background: '#f0f0f0',
-    overflow: 'hidden',
-    position: 'relative',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-  },
-  imagePlaceholder: {
-    width: '100%',
-    height: '100%',
-    background: 'linear-gradient(135deg, #ffcccc 0%, #ff9999 100%)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '48px',
-    color: '#780505',
-    fontWeight: 'bold',
-  },
-  popularBadge: {
-    position: 'absolute',
-    top: '10px',
-    left: '10px',
-    background: 'rgba(255, 87, 34, 0.9)',
-    color: 'white',
-    padding: '5px 10px',
-    borderRadius: '20px',
-    fontSize: '12px',
-    fontWeight: 'bold',
-  },
-  itemInfo: {
-    padding: '20px',
-    flexGrow: 1,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  itemName: {
-    margin: '0 0 10px 0',
-    fontSize: '18px',
-    color: '#333',
-  },
-  itemDescription: {
-    color: '#666',
-    fontSize: '14px',
-    lineHeight: 1.5,
-    margin: '0 0 10px 0',
-    flexGrow: 1,
-  },
-  composition: {
-    color: '#888',
-    fontSize: '12px',
-    marginBottom: '10px',
-    fontStyle: 'italic',
-  },
-  itemBottom: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  itemPrice: {
-    fontSize: '20px',
-    fontWeight: 'bold',
-    color: '#780505',
-  },
-  itemWeight: {
-    fontSize: '14px',
-    color: '#666',
-  },
-  addButton: {
-    background: '#780505',
-    color: 'white',
-    border: 'none',
-    padding: '10px 20px',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-    transition: 'background 0.3s ease',
-  },
-  floatingCartButton: {
-    position: 'fixed',
-    bottom: '30px',
-    right: '30px',
-    background: '#780505',
-    color: 'white',
-    border: 'none',
-    padding: '16px 32px',
-    borderRadius: '50px',
-    fontSize: '16px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    boxShadow: '0 6px 20px rgba(120, 5, 5, 0.3)',
-    zIndex: 100,
-  },
-};
-
-// Добавляем анимацию спиннера
-const styleSheet = document.styleSheets[0];
-styleSheet.insertRule(`
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-`, styleSheet.cssRules.length);
+// Добавляем глобальные стили для уведомлений
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+    
+    .spinner-icon {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #ffeaea;
+      border-top: 4px solid #8b0000;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    
+    .spinner-icon.large {
+      width: 50px;
+      height: 50px;
+    }
+    
+    .error-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: white;
+      color: #d32f2f;
+      border-radius: 50%;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    
+    .empty-menu-icon {
+      font-size: 60px;
+      opacity: 0.3;
+      margin-bottom: 20px;
+    }
+    
+    .placeholder-text {
+      color: rgba(0, 0, 0, 0.2);
+      font-size: 14px;
+      font-weight: bold;
+    }
+    
+    .cart-icon {
+      margin-right: 8px;
+    }
+    
+    .refresh-button {
+      background: #d32f2f;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-size: 16px;
+    }
+    
+    .refresh-button:hover {
+      background: #b71c1c;
+    }
+  `;
+  document.head.appendChild(style);
+}
 
 export default ClientDashboard;
