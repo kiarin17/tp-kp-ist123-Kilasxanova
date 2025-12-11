@@ -1505,7 +1505,7 @@ const Admin = () => {
       {/* Шапка */}
       <div className="admin-header">
         <h1>
-          <span className="header-icon">⚡</span>
+          <span className="header-text">⚡</span>
           Админ-панель
         </h1>
         <div className="admin-user">
@@ -1520,8 +1520,7 @@ const Admin = () => {
             localStorage.removeItem('user');
             navigate('/login');
           }} className="logout-btn">
-            <span className="logout-icon">↪</span>
-            Выйти
+            <span className="logout-text">Выйти</span>
           </button>
         </div>
       </div>
@@ -1532,15 +1531,13 @@ const Admin = () => {
           className={`tab-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
           onClick={() => setActiveTab('dashboard')}
         >
-          <span className="tab-icon"></span>
-          Дашборд
+          <span className="tab-text">Дашборд</span>
         </button>
         <button 
           className={`tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
           onClick={() => setActiveTab('orders')}
         >
-          <span className="tab-icon"></span>
-          Заказы
+          <span className="tab-text">Заказы</span>
           {stats.orders?.pending > 0 && (
             <span className="tab-badge">{stats.orders.pending}</span>
           )}
@@ -1549,8 +1546,7 @@ const Admin = () => {
           className={`tab-btn ${activeTab === 'reservations' ? 'active' : ''}`}
           onClick={() => setActiveTab('reservations')}
         >
-          <span className="tab-icon"></span>
-          Бронирования
+          <span className="tab-text">Бронирования</span>
           {reservationsStats?.pending > 0 && (
             <span className="tab-badge">{reservationsStats.pending}</span>
           )}
@@ -1559,23 +1555,20 @@ const Admin = () => {
           className={`tab-btn ${activeTab === 'users' ? 'active' : ''}`}
           onClick={() => setActiveTab('users')}
         >
-          <span className="tab-icon">👥</span>
-          Пользователи
+          <span className="tab-text">Пользователи</span>
           <span className="tab-badge">{stats.users?.total || 0}</span>
         </button>
         <button 
           className={`tab-btn ${activeTab === 'categories' ? 'active' : ''}`}
           onClick={() => setActiveTab('categories')}
         >
-          <span className="tab-icon"></span>
-          Категории
+          <span className="tab-text">Категории</span>
         </button>
         <button 
           className="tab-btn"
           onClick={() => navigate('/menu')}
         >
-          <span className="tab-icon"></span>
-          Управление меню
+          <span className="tab-text">Управление меню</span>
         </button>
       </div>
 
@@ -1595,7 +1588,7 @@ const Admin = () => {
             
             <div className="stats-grid">
               <div className="stat-card stat-primary" onClick={() => setActiveTab('orders')} style={{cursor: 'pointer'}}>
-                <div className="stat-icon"></div>
+                <div className="stat-text">📦</div>
                 <h3>Всего заказов</h3>
                 <span className="stat-number">{stats.orders?.total || 0}</span>
               </div>
@@ -1604,31 +1597,31 @@ const Admin = () => {
                 setActiveTab('orders');
                 setFilters({...filters, status: 'Pending'});
               }} style={{cursor: 'pointer'}}>
-                <div className="stat-icon"></div>
+                <div className="stat-text">⏰</div>
                 <h3>Ожидают подтверждения</h3>
                 <span className="stat-number">{stats.orders?.pending || 0}</span>
               </div>
               
               <div className="stat-card stat-success">
-                <div className="stat-icon"></div>
+                <div className="stat-text">📅</div>
                 <h3>Заказов сегодня</h3>
                 <span className="stat-number">{stats.orders?.today || 0}</span>
               </div>
               
               <div className="stat-card stat-revenue">
-                <div className="stat-icon"></div>
+                <div className="stat-text">💰</div>
                 <h3>Выручка сегодня</h3>
                 <span className="stat-number">{formatCurrency(stats.revenue?.today || 0)}</span>
               </div>
               
               <div className="stat-card stat-users" onClick={() => setActiveTab('users')} style={{cursor: 'pointer'}}>
-                <div className="stat-icon"></div>
+                <div className="stat-text">👥</div>
                 <h3>Всего пользователей</h3>
                 <span className="stat-number">{stats.users?.total || 0}</span>
               </div>
               
               <div className="stat-card stat-couriers">
-                <div className="stat-icon"></div>
+                <div className="stat-text">🚴</div>
                 <h3>Свободных курьеров</h3>
                 <span className="stat-number">{stats.users?.availableCouriers || 0}</span>
               </div>
@@ -1675,7 +1668,7 @@ const Admin = () => {
               </div>
             ) : filteredOrders.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-icon"></div>
+                <div className="empty-text">📭</div>
                 <h3>Нет заказов</h3>
                 <p>Здесь появятся заказы от клиентов</p>
                 <button 
@@ -1742,8 +1735,7 @@ const Admin = () => {
                           e.stopPropagation();
                           handleOrderClick(order);
                         }}>
-                          <span className="btn-icon"></span>
-                          Подробнее
+                          <span className="btn-text">Подробнее</span>
                         </button>
                         <button 
                           className="btn-danger" 
@@ -1752,8 +1744,7 @@ const Admin = () => {
                             handleDeleteOrder(order.id);
                           }}
                         >
-                          <span className="btn-icon"></span>
-                          Удалить
+                          <span className="btn-text">Удалить</span>
                         </button>
                         <button 
                           className="btn-warning" 
@@ -1814,22 +1805,22 @@ const Admin = () => {
             {/* Статистика бронирований */}
             <div className="reservations-stats">
               <div className="stat-card" onClick={() => setReservationFilters({...reservationFilters, status: 'pending'})} style={{cursor: 'pointer'}}>
-                <div className="stat-icon"></div>
+                <div className="stat-text">⏰</div>
                 <h3>Ожидают</h3>
                 <span className="stat-number">{reservationsStats?.pending || 0}</span>
               </div>
               <div className="stat-card" onClick={() => setReservationFilters({...reservationFilters, date: 'today'})} style={{cursor: 'pointer'}}>
-                <div className="stat-icon"></div>
+                <div className="stat-text">📅</div>
                 <h3>Сегодня</h3>
                 <span className="stat-number">{reservationsStats?.today || 0}</span>
               </div>
               <div className="stat-card" onClick={() => setReservationFilters({...reservationFilters, status: 'confirmed'})} style={{cursor: 'pointer'}}>
-                <div className="stat-icon">✓</div>
+                <div className="stat-text">✓</div>
                 <h3>Подтверждено</h3>
                 <span className="stat-number">{reservationsStats?.upcoming || 0}</span>
               </div>
               <div className="stat-card" onClick={() => setReservationFilters({...reservationFilters, status: 'cancelled'})} style={{cursor: 'pointer'}}>
-                <div className="stat-icon">✗</div>
+                <div className="stat-text">✗</div>
                 <h3>Отменено</h3>
                 <span className="stat-number">{reservationsStats?.cancelledToday || 0}</span>
               </div>
@@ -1843,7 +1834,7 @@ const Admin = () => {
               </div>
             ) : reservations.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-icon"></div>
+                <div className="empty-text">📭</div>
                 <h3>Нет бронирований</h3>
                 <p>Здесь появятся бронирования клиентов</p>
                 <button 
@@ -1900,34 +1891,34 @@ const Admin = () => {
                             <td className="reservation-actions">
                               <div className="action-buttons">
                                 <button 
-                                  className="action-icon-btn" 
+                                  className="action-text-btn" 
                                   title="Подробнее"
                                   onClick={() => handleReservationClick(reservation)}
                                 >
-                                  
+                                  Подробнее
                                 </button>
                                 {reservation.status === 'pending' && (
                                   <button 
-                                    className="action-icon-btn confirm-btn" 
+                                    className="action-text-btn confirm-btn" 
                                     title="Подтвердить"
                                     onClick={() => handleConfirmReservation(reservation.id)}
                                   >
-                                    ✓
+                                    Подтвердить
                                   </button>
                                 )}
                                 <button 
-                                  className="action-icon-btn cancel-btn" 
+                                  className="action-text-btn cancel-btn" 
                                   title="Отменить"
                                   onClick={() => handleCancelReservation(reservation.id)}
                                 >
-                                  ✗
+                                  Отменить
                                 </button>
                                 <button 
-                                  className="action-icon-btn call-btn" 
+                                  className="action-text-btn call-btn" 
                                   title="Позвонить"
                                   onClick={() => handleCallReservationCustomer(reservation)}
                                 >
-                                  
+                                  Позвонить
                                 </button>
                               </div>
                             </td>
@@ -1947,8 +1938,7 @@ const Admin = () => {
             <div className="section-header">
               <h2>Пользователи системы</h2>
               <button className="add-user-btn" onClick={handleAddUser}>
-                <span className="btn-icon"></span>
-                Добавить пользователя
+                <span className="btn-text">Добавить пользователя</span>
               </button>
             </div>
 
@@ -1959,7 +1949,7 @@ const Admin = () => {
               </div>
             ) : users.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-icon"></div>
+                <div className="empty-text">👤</div>
                 <h3>Нет пользователей</h3>
                 <p>Здесь появятся пользователи системы</p>
                 <button 
@@ -2027,14 +2017,14 @@ const Admin = () => {
                           <td className="user-date">{formatDate(user.createdAt)}</td>
                           <td className="user-actions">
                             <button 
-                              className="action-icon-btn" 
+                              className="action-text-btn" 
                               title="Редактировать"
                               onClick={() => handleEditUser(user)}
                             >
                               Редактировать
                             </button>
                             <button 
-                              className="action-icon-btn" 
+                              className="action-text-btn" 
                               title="Удалить"
                               onClick={() => handleDeleteUser(user.id)}
                             >
@@ -2056,8 +2046,7 @@ const Admin = () => {
             <div className="section-header">
               <h2>Управление категориями</h2>
               <button className="add-user-btn" onClick={handleAddCategory}>
-                <span className="btn-icon"></span>
-                Добавить категорию
+                <span className="btn-text">Добавить категорию</span>
               </button>
             </div>
 
@@ -2068,7 +2057,7 @@ const Admin = () => {
               </div>
             ) : categories.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-icon"></div>
+                <div className="empty-text">📂</div>
                 <h3>Нет категорий</h3>
                 <p>Добавьте категории для организации меню</p>
                 <button 
@@ -2105,14 +2094,14 @@ const Admin = () => {
                     </div>
                     <div className="category-actions">
                       <button 
-                        className="action-icon-btn" 
+                        className="action-text-btn" 
                         title="Редактировать"
                         onClick={() => handleEditCategory(category)}
                       >
                         Редактировать
                       </button>
                       <button 
-                        className="action-icon-btn" 
+                        className="action-text-btn" 
                         title="Удалить"
                         onClick={() => handleDeleteCategory(category.id)}
                       >

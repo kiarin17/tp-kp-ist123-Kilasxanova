@@ -25,15 +25,17 @@
   animation: imgAppear 1.5s forwards ease-out;
 }
 
-/* Заголовок */
+/* Заголовок - ИСПРАВЛЕНИЕ: Убрано margin-top, которое скрывало текст */
 .hero-content {
   font-family: "TDDobruiYstav24";
   font-size: 120px;
   text-align: center;
   color: rgb(214, 31, 31);
-  position: relative;
+  position: absolute; /* Делаем абсолютным позиционирование */
+  top: 50px; /* Задаем фиксированное положение сверху */
+  left: 0;
+  right: 0;
   z-index: 100;
-  margin-top: -150px;
 
   opacity: 0;
   transform: translateY(-50px);
@@ -41,14 +43,7 @@
 }
 
 /* Подзаголовки */
-.hero-subtitle,
-.hero-subtitle2 {
-  opacity: 0;
-  transform: translateY(50px);
-  animation: fadeUp 1s forwards;
-}
-
-.hero-subtitle {
+.hero-subtitle3 {
   position: absolute;
   bottom: 500px;
   left: 100px;
@@ -57,8 +52,10 @@
   color: #000;
   text-align: right;
   font-size: 24px;
-  animation-delay: 1s;
- 
+  
+  opacity: 0;
+  transform: translateY(50px);
+  animation: fadeUp 1s forwards 1s; /* Добавлена анимация */
 }
 
 .hero-subtitle2 {
@@ -70,7 +67,10 @@
   color: #000;
   text-align: left;
   font-size: 24px;
-  animation-delay: 1.5s;
+  
+  opacity: 0;
+  transform: translateY(50px);
+  animation: fadeUp 1s forwards 1.5s;
 }
 
 /* Кнопки */
@@ -113,6 +113,111 @@
   font-weight: 600;
 }
 
+/* ===================== */
+/* Анимации - ОСТАЛИСЬ БЕЗ ИЗМЕНЕНИЙ */
+/* ===================== */
+
+@keyframes fadeDown {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes imgAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===================== */
+/* Адаптивность - ДОБАВИМ ИСПРАВЛЕНИЯ ДЛЯ ЗАГОЛОВКА */
+/* ===================== */
+
+@media (max-width: 1200px) {
+  .hero-content {
+    font-size: 90px;
+    top: 40px; /* Адаптируем положение */
+  }
+  .hero-subtitle,
+  .hero-subtitle2 {
+    font-size: 20px;
+  }
+  .btn {
+    left: 50%;
+    transform: translateX(-50%) translateY(50px) scale(0.95);
+  }
+  .hero-img {
+    margin-right: 50px;
+    height: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-content {
+    font-size: 60px;
+    top: 30px;
+  }
+  .hero-subtitle3 {
+    bottom: 400px;
+    left: 20px;
+    max-width: 250px;
+    font-size: 18px;
+  }
+  .hero-subtitle2 {
+    bottom: 400px;
+    right: 20px;
+    max-width: 250px;
+    font-size: 18px;
+  }
+  .btn {
+    width: 220px;
+    height: 80px;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%) translateY(50px) scale(0.95);
+  }
+  .btn-primary, .btn-second {
+    font-size: 16px;
+  }
+  .hero-img {
+    height: 60%;
+    margin-right: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content {
+    font-size: 40px;
+    top: 20px;
+  }
+  .hero-subtitle3, .hero-subtitle2 {
+    font-size: 14px;
+    bottom: 300px;
+  }
+  .btn {
+    width: 180px;
+    height: 60px;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(50px) scale(0.95);
+  }
+  .hero-img {
+    height: 50%;
+  }
+}
 
 
 /* ===================== */

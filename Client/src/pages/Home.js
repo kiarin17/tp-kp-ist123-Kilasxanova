@@ -9,7 +9,6 @@ export default function Home() {
       <Hero />
       <Services />
       <WelcomBlock />
-      <Footer />
     </>
   );
 }

@@ -41,7 +41,6 @@ export default function Header() {
           <Link to="/menu">Меню</Link>
           <Link to="/tasting">Дегустация</Link>
           <Link to="/reservation">Бронирование</Link>
-          <Link to="/shop">Магазин</Link>
           <Link to="/about">О нас</Link>
           <Link to="/contact">Контакты</Link>
       

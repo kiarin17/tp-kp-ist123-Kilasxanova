@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { FaUser, FaLock } from "react-icons/fa";
+import { FaUser, FaLock, FaArrowLeft, FaCrown } from "react-icons/fa";
+import '../styles/login.css';
 
 const Login = () => {
     const [form, setForm] = useState({ 
@@ -70,261 +71,119 @@ const Login = () => {
     };
 
     return (
-        <div style={styles.container}>
-            <div style={styles.form}>
-                <div style={styles.logo}>
-                    <h1 style={styles.logoText}>Граф Суворов</h1>
-                    <p style={styles.logoSubtitle}>Вход в систему</p>
+        <div className="login-container">
+            <div className="login-content">
+                <div className="login-header">
+                    <div className="login-logo">
+                        <h1 className="logo-title">Граф Суворов</h1>
+                    </div>
+                    <p className="login-subtitle">Вход в систему</p>
+                    <div className="header-divider">
+                        <div className="divider-line"></div>
+                        <div className="divider-icon"></div>
+                        <div className="divider-line"></div>
+                    </div>
                 </div>
                 
-                {error && (
-                    <div style={styles.error}>
-                        <div style={styles.errorIcon}>!</div>
-                        <div style={styles.errorText}>{error}</div>
-                    </div>
-                )}
-                
-                {message && (
-                    <div style={styles.success}>
-                        <div style={styles.successIcon}>✓</div>
-                        <div style={styles.successText}>{message}</div>
-                    </div>
-                )}
-                
-                <form onSubmit={handleSubmit} style={styles.formContent}>
-                    <div style={styles.formGroup}>
-                        <label htmlFor="email" style={styles.label}>
-                            <FaUser style={styles.labelIcon} />
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={form.email}
-                            onChange={handleChange}
-                            required
-                            placeholder="example@mail.ru"
-                            style={styles.input}
-                        />
-                    </div>
-
-                    <div style={styles.formGroup}>
-                        <label htmlFor="password" style={styles.label}>
-                            <FaLock style={styles.labelIcon} />
-                            Пароль
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={form.password}
-                            onChange={handleChange}
-                            required
-                            placeholder="Введите пароль"
-                            style={styles.input}
-                        />
-                    </div>
+                <div className="login-form-wrapper">
+                    {error && (
+                        <div className="login-error">
+                            <div className="error-icon">!</div>
+                            <div className="error-text">{error}</div>
+                        </div>
+                    )}
                     
-                    <button 
-                        type="submit" 
-                        style={{
-                            ...styles.button,
-                            ...(loading ? styles.buttonDisabled : {})
-                        }}
-                        disabled={loading}
-                    >
-                        {loading ? 'Вход...' : 'Войти'}
-                    </button>
-                </form>
+                    {message && (
+                        <div className="login-success">
+                            <div className="success-icon">✓</div>
+                            <div className="success-text">{message}</div>
+                        </div>
+                    )}
+                    
+                    <form onSubmit={handleSubmit} className="login-form">
+                        <div className="form-group">
+                            <div className="input-wrapper">
+                                <div className="input-icon">
+                                    <FaUser />
+                                </div>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={form.email}
+                                    onChange={handleChange}
+                                    required
+                                    className="form-input"
+                                />
+                                <label htmlFor="email" className="floating-label">
+                                    Email
+                                </label>
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <div className="input-wrapper">
+                                <div className="input-icon">
+                                    <FaLock />
+                                </div>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    value={form.password}
+                                    onChange={handleChange}
+                                    required
+                                    className="form-input"
+                                />
+                                <label htmlFor="password" className="floating-label">
+                                    Пароль
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button 
+                            type="submit" 
+                            className={`login-button ${loading ? 'loading' : ''}`}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <>
+                                    <span className="spinner"></span>
+                                    <span>Вход...</span>
+                                </>
+                            ) : (
+                                'Войти'
+                            )}
+                        </button>
+                    </form>
+                    
+                    <div className="login-links">
+                        <Link to="/register" className="register-link">
+                            <span>Нет аккаунта?</span>
+                            <span className="link-arrow">→</span>
+                        </Link>
+                        
+                        <Link to="/" className="back-link">
+                            <FaArrowLeft />
+                            <span>Вернуться на главную</span>
+                        </Link>
+                    </div>
+                </div>
                 
-                <div style={styles.links}>
-                    <p style={styles.linkText}>
-                        Нет аккаунта?{' '}
-                        <Link to="/register" style={styles.link}>
-                            Зарегистрироваться
-                        </Link>
-                    </p>
-                    <p style={styles.linkText}>
-                        <Link to="/" style={styles.link}>
-                            ← Вернуться на главную
-                        </Link>
+                <div className="login-footer">
+                    <p className="footer-text">
+                        Вход в систему подтверждает ваше согласие с правилами использования
                     </p>
                 </div>
             </div>
             
-            <div style={styles.footer}>
-                <p style={styles.footerText}>
-                    Вход в систему подтверждает ваше согласие с правилами использования
-                </p>
+            <div className="login-decoration">
+                <div className="decoration-ornament ornament-1"></div>
+                <div className="decoration-ornament ornament-2"></div>
+                <div className="decoration-ornament ornament-3"></div>
             </div>
         </div>
     );
-};
-
-const styles = {
-    container: {
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #8B4513 0%, #D2691E 100%)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '20px',
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
-    },
-    form: {
-        background: 'white',
-        padding: '40px',
-        borderRadius: '20px',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-        width: '100%',
-        maxWidth: '400px',
-        border: '2px solid #FFD700'
-    },
-    logo: {
-        textAlign: 'center',
-        marginBottom: '30px'
-    },
-    logoText: {
-        color: '#8B4513',
-        fontSize: '2.5rem',
-        fontWeight: 'bold',
-        margin: '0 0 10px 0'
-    },
-    logoSubtitle: {
-        color: '#666',
-        fontSize: '1rem',
-        margin: 0
-    },
-    formContent: {
-        marginBottom: '20px'
-    },
-    formGroup: {
-        marginBottom: '20px'
-    },
-    label: {
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '8px',
-        color: '#8B4513',
-        fontWeight: '600',
-        fontSize: '14px'
-    },
-    labelIcon: {
-        marginRight: '8px',
-        fontSize: '16px'
-    },
-    input: {
-        width: '100%',
-        padding: '14px 16px',
-        border: '2px solid #FFE4B5',
-        borderRadius: '10px',
-        fontSize: '1rem',
-        transition: 'all 0.3s ease',
-        background: '#fff',
-        color: '#333'
-    },
-    button: {
-        width: '100%',
-        background: 'linear-gradient(135deg, #8B4513, #D2691E)',
-        color: 'white',
-        border: 'none',
-        padding: '16px',
-        borderRadius: '10px',
-        fontSize: '1.1rem',
-        fontWeight: 'bold',
-        cursor: 'pointer',
-        transition: 'all 0.3s ease',
-        marginTop: '10px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    buttonDisabled: {
-        opacity: 0.7,
-        cursor: 'not-allowed'
-    },
-    error: {
-        background: 'linear-gradient(135deg, #ff4444, #cc0000)',
-        color: 'white',
-        padding: '15px',
-        borderRadius: '10px',
-        marginBottom: '25px',
-        display: 'flex',
-        alignItems: 'center',
-    },
-    errorIcon: {
-        background: 'white',
-        color: '#ff4444',
-        width: '24px',
-        height: '24px',
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontWeight: 'bold',
-        marginRight: '12px',
-        fontSize: '14px'
-    },
-    errorText: {
-        flex: 1,
-        fontWeight: '500'
-    },
-    success: {
-        background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
-        color: 'white',
-        padding: '15px',
-        borderRadius: '10px',
-        marginBottom: '25px',
-        display: 'flex',
-        alignItems: 'center',
-    },
-    successIcon: {
-        background: 'white',
-        color: '#4CAF50',
-        width: '24px',
-        height: '24px',
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontWeight: 'bold',
-        marginRight: '12px',
-        fontSize: '14px'
-    },
-    successText: {
-        flex: 1,
-        fontWeight: '500'
-    },
-    links: {
-        textAlign: 'center',
-        marginTop: '20px',
-        paddingTop: '20px',
-        borderTop: '1px solid #eee'
-    },
-    linkText: {
-        color: '#666',
-        fontSize: '0.95rem',
-        margin: '0 0 10px 0'
-    },
-    link: {
-        color: '#8B4513',
-        fontWeight: '600',
-        textDecoration: 'none',
-        transition: 'color 0.3s ease'
-    },
-    footer: {
-        marginTop: '30px',
-        textAlign: 'center',
-        color: 'rgba(255, 255, 255, 0.8)',
-        fontSize: '0.8rem',
-        maxWidth: '500px',
-        padding: '0 20px'
-    },
-    footerText: {
-        margin: 0
-    }
 };
 
 export default Login;
