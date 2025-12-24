@@ -7,8 +7,6 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-top">
-        
-       
         <div className="footer-section">
           <div className="footer-logo">
             <img src={logo} alt="Логотип" className="logo" />
@@ -19,14 +17,21 @@ const Footer = () => {
           </p>
         </div>
 
-        
         <div className="footer-section">
           <h4>Быстрые ссылки</h4>
           <ul>
-            <li><Link to="/">Главная</Link></li>
-            <li><Link to="/menu">Меню</Link></li>
-            <li><Link to="/tasting">Дегустация</Link></li>
-            <li><Link to="/shop">Магазин</Link></li>
+            <li>
+              <Link to="/">Главная</Link>
+            </li>
+            <li>
+              <Link to="/menu">Меню</Link>
+            </li>
+            <li>
+              <Link to="/tasting">Дегустация</Link>
+            </li>
+            <li>
+              <Link to="/shop">Магазин</Link>
+            </li>
           </ul>
         </div>
 
@@ -39,7 +44,6 @@ const Footer = () => {
           </ul>
         </div>
 
-      
         <div className="footer-section">
           <h4>Время работы</h4>
           <ul>
@@ -48,11 +52,9 @@ const Footer = () => {
             <li>Праздники: 10:00 – 20:00</li>
           </ul>
         </div>
-
       </div>
 
       <div className="footer-divider"></div>
-
 
       <div className="footer-divider"></div>
 
@@ -62,7 +64,6 @@ const Footer = () => {
         <br />
         Сделано с ❤️ для возрождения русских традиций
       </div>
-
     </footer>
   );
 };

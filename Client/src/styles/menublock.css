@@ -1,0 +1,47 @@
+.menu-block {
+  background-image: url(../img/background-menu-block.png);
+  padding: 40px;
+  height: 420px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+h2 {
+  color: azure;
+  text-align: center;
+  padding: 0px;
+  margin: 0px;
+  font-family: "TDDobruiYstav24";
+  font-size: 120px;
+  margin-top: 80px;
+}
+
+.text {
+  font-size: 24px;
+  color: #f5debd;
+  text-align: center;
+  padding: 0px;
+  margin: 0;
+}
+
+.hero-button {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.button {
+  text-align: center;
+  padding: 14px 22px;
+  border: 2px solid #d3a019;
+  cursor: pointer;
+  font-size: 24px;
+  transition: 0.3s;
+  background-color: #f0e6d5;
+  font-family: "Zabava";
+  letter-spacing: 1яpx;
+}
+
+.button:hover {
+  background-color: #780505;
+  color: aliceblue;
+}

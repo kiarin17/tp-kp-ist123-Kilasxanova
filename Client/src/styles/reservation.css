@@ -1,0 +1,1389 @@
+/* Основные стили и шрифты */
+@import url('https://fonts.googleapis.com/css2?family=Zabava&family=Forum&display=swap');
+
+:root {
+  --primary-red: #8b0000;
+  --dark-red: #5a0b0b;
+  --light-red: #b22222;
+  --gold: #ffd700;
+  --light-gold: #ffed4e;
+  --cream: #f9f2e8;
+  --beige: #f5e6d3;
+  --brown: #3d1c0f;
+  --light-brown: #5a3c2d;
+  --wood: #e6c9a8;
+  --shadow: rgba(139, 0, 0, 0.15);
+  --white: #FFFFFF;
+  --off-white: #F8F5F5;
+  --text-dark: #222222;
+  --text-medium: #555555;
+  --accent-red: #CC3333;
+  
+}
+
+.reservation-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 20px 80px;
+  background: linear-gradient(135deg, var(--cream) 0%, var(--beige) 100%);
+  min-height: 100vh;
+  position: relative;
+}
+
+.reservation-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 30%, var(--shadow) 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, var(--shadow) 1px, transparent 1px);
+  background-size: 150px 150px, 200px 200px;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+.zabava-font {
+  font-family: 'Zabava', cursive;
+  letter-spacing: 1px;
+}
+
+/* ===== ШАПКА ===== */
+.reservation-header {
+  text-align: center;
+  margin-bottom: 60px;
+  position: relative;
+  padding-top: 20px;
+}
+
+.reservation-header h1 {
+  font-family: 'Zabava', cursive;
+  color: var(--primary-red);
+  font-size: 3.5rem;
+  text-transform: uppercase;
+  margin-bottom: 25px;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 20px;
+  letter-spacing: 3px;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.reservation-header h1::before,
+.reservation-header h1::after {
+  content: '❖';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary-red);
+  font-size: 2rem;
+  opacity: 0.7;
+}
+
+.reservation-header h1::before {
+  left: -50px;
+}
+
+.reservation-header h1::after {
+  right: -50px;
+}
+
+.reservation-header h1:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 4px;
+  background: linear-gradient(to right, transparent, var(--primary-red), transparent);
+}
+
+.header-subtitle {
+  color: var(--light-brown);
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+  font-family: 'Forum', serif;
+}
+
+/* ===== ОСНОВНОЙ КОНТЕНТ ===== */
+.reservation-content {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 60px;
+  align-items: start;
+}
+
+/* ===== ФОРМА БРОНИРОВАНИЯ ===== */
+.reservation-form-section {
+  background: var(--white);
+  border-radius: 25px;
+  padding: 50px;
+  box-shadow: 0 20px 50px var(--shadow);
+  border: 3px solid var(--wood);
+  position: relative;
+  overflow: hidden;
+}
+
+.reservation-form-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, 
+    var(--primary-red), 
+    var(--light-red), 
+    var(--primary-red));
+}
+
+.reservation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+/* Заголовки секций формы */
+.form-section-title {
+  font-family: 'Zabava', cursive;
+  color: var(--primary-red);
+  font-size: 1.8rem;
+  margin: 20px 0 25px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--wood);
+  letter-spacing: 1px;
+  position: relative;
+}
+
+.form-section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 80px;
+  height: 2px;
+  background: var(--primary-red);
+}
+
+/* Поле ввода */
+.form-field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-field-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-left: 8px;
+}
+
+.field-icon {
+  color: var(--primary-red);
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.field-label {
+  color: var(--brown);
+  font-size: 1.3rem;
+  font-family: 'Zabava', cursive;
+  margin: 0;
+  letter-spacing: 1px;
+  position: relative;
+}
+
+.field-label::after {
+  content: '*';
+  color: var(--accent-red);
+  margin-left: 5px;
+}
+
+/* Поля ввода */
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 18px 22px;
+  border: 2px solid var(--wood);
+  border-radius: 15px;
+  font-size: 1.1rem;
+  background: var(--off-white);
+  transition: all 0.4s ease;
+  font-family: 'Forum', serif;
+  color: var(--brown);
+  box-sizing: border-box;
+  position: relative;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  border-color: var(--primary-red);
+  background: var(--white);
+  box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.15);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238b0000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 22px center;
+  background-size: 20px;
+  padding-right: 60px;
+  cursor: pointer;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 140px;
+  line-height: 1.6;
+}
+
+/* Двойная строка */
+.form-row-double {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+/* Радио кнопки */
+.radio-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  padding: 18px 22px;
+  background: var(--off-white);
+  border-radius: 15px;
+  border: 2px solid var(--wood);
+  transition: all 0.4s ease;
+  flex: 1;
+  min-width: 250px;
+  position: relative;
+  overflow: hidden;
+}
+
+.radio-label:hover {
+  background: rgba(139, 0, 0, 0.05);
+  border-color: var(--primary-red);
+  transform: translateY(-3px);
+}
+
+.radio-label:has(.radio-input:checked) {
+  background: rgba(139, 0, 0, 0.1);
+  border-color: var(--primary-red);
+  box-shadow: 0 8px 25px rgba(139, 0, 0, 0.15);
+}
+
+.radio-input {
+  display: none;
+}
+
+.radio-custom {
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--wood);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.radio-label:has(.radio-input:checked) .radio-custom {
+  border-color: var(--primary-red);
+  background: var(--primary-red);
+  box-shadow: inset 0 0 0 5px white;
+}
+
+.radio-text {
+  color: var(--brown);
+  font-weight: 600;
+  font-size: 1.1rem;
+  font-family: 'Forum', serif;
+}
+
+/* Чекбоксы услуг */
+.services-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.service-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+  padding: 20px;
+  background: var(--off-white);
+  border-radius: 15px;
+  border: 2px solid var(--wood);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-checkbox-label:hover {
+  background: rgba(139, 0, 0, 0.05);
+  border-color: var(--primary-red);
+  transform: translateY(-3px);
+}
+
+.service-checkbox-label:has(.service-checkbox:checked) {
+  background: rgba(139, 0, 0, 0.1);
+  border-color: var(--primary-red);
+  box-shadow: 0 8px 25px rgba(139, 0, 0, 0.15);
+}
+
+.service-checkbox {
+  display: none;
+}
+
+.checkbox-custom {
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--wood);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.service-checkbox-label:has(.service-checkbox:checked) .checkbox-custom {
+  border-color: var(--primary-red);
+  background: var(--primary-red);
+}
+
+.service-checkbox-label:has(.service-checkbox:checked) .checkbox-custom:after {
+  content: '✓';
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.service-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.service-name {
+  color: var(--brown);
+  font-weight: 600;
+  font-size: 1.1rem;
+  font-family: 'Forum', serif;
+}
+
+.service-price {
+  color: var(--primary-red);
+  font-weight: 700;
+  font-size: 1.2rem;
+  background: rgba(139, 0, 0, 0.1);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-family: 'Zabava', cursive;
+  letter-spacing: 1px;
+}
+
+.service-icon {
+  color: var(--primary-red);
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* Кнопка отправки */
+.form-button-row {
+  margin-top: 30px;
+  position: relative;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 25px;
+  background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+  color: var(--white);
+  border: none;
+  border-radius: 20px;
+  font-size: 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  box-shadow: 0 15px 40px rgba(139, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  font-family: 'Zabava', cursive;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 215, 0, 0.3), 
+    transparent);
+  transition: left 0.6s;
+}
+
+.submit-btn:hover::before {
+  left: 100%;
+}
+
+.submit-btn:hover {
+  background: linear-gradient(135deg, var(--dark-red), var(--primary-red));
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(139, 0, 0, 0.4);
+}
+
+.btn-icon {
+  width: 26px;
+  height: 26px;
+}
+
+/* ===== ИНФОРМАЦИОННЫЙ БЛОК ===== */
+.reservation-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  position: sticky;
+  top: 30px;
+}
+
+.info-card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 15px 35px var(--shadow);
+  border: 3px solid var(--wood);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.info-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 50px rgba(139, 0, 0, 0.25);
+  border-color: var(--primary-red);
+}
+
+.info-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, 
+    var(--primary-red), 
+    var(--light-red), 
+    var(--primary-red));
+}
+
+.info-card h3 {
+  color: var(--primary-red);
+  margin: 0 0 25px 0;
+  font-size: 1.8rem;
+  font-family: 'Zabava', cursive;
+  letter-spacing: 1px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--wood);
+  position: relative;
+}
+
+.info-card h3::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: var(--primary-red);
+}
+
+/* Карточка контактов */
+.contact-card {
+  background: linear-gradient(135deg, rgba(139, 0, 0, 0.05) 0%, rgba(255, 255, 255, 1) 100%);
+}
+
+.contact-details {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  background: var(--off-white);
+  border-radius: 15px;
+  border-left: 5px solid var(--primary-red);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-item:hover {
+  background: rgba(139, 0, 0, 0.08);
+  border-left-color: var(--gold);
+  transform: translateX(5px);
+}
+
+.contact-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 215, 0, 0.1), 
+    transparent);
+  transition: left 0.6s;
+}
+
+.contact-item:hover::before {
+  left: 100%;
+}
+
+.contact-icon {
+  color: var(--primary-red);
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.contact-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.contact-label {
+  color: var(--brown);
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-family: 'Forum', serif;
+}
+
+.contact-value {
+  color: var(--light-brown);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Карточка процесса */
+.process-card {
+  background: linear-gradient(135deg, rgba(245, 240, 240, 0.9) 0%, var(--white) 100%);
+}
+
+.process-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.process-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.step-number {
+  background: var(--primary-red);
+  color: var(--white);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.step-number::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 215, 0, 0.3), 
+    transparent);
+  animation: shimmerStep 2s infinite;
+}
+
+@keyframes shimmerStep {
+  0%, 100% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+}
+
+.step-content h4 {
+  color: var(--brown);
+  margin: 0 0 8px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  font-family: 'Forum', serif;
+}
+
+.step-content p {
+  color: var(--light-brown);
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Карточка правил */
+.rules-card {
+  background: linear-gradient(135deg, rgba(240, 230, 230, 0.9) 0%, var(--white) 100%);
+}
+
+.rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rules-list li {
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(139, 0, 0, 0.1);
+  color: var(--brown);
+  font-size: 1.05rem;
+  position: relative;
+  padding-left: 32px;
+  line-height: 1.5;
+  font-family: 'Forum', serif;
+}
+
+.rules-list li::before {
+  content: '❖';
+  color: var(--primary-red);
+  font-size: 14px;
+  position: absolute;
+  left: 0;
+  top: 16px;
+  margin-right: 12px;
+}
+
+.rules-list li:last-child {
+  border-bottom: none;
+}
+
+/* Карточка предупреждения */
+.warning-card {
+  background: linear-gradient(135deg, rgba(255, 230, 230, 0.95) 0%, var(--white) 100%);
+  border: 3px solid var(--accent-red);
+}
+
+.warning-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.warning-icon {
+  color: var(--accent-red);
+  width: 28px;
+  height: 28px;
+}
+
+.warning-card h3 {
+  color: var(--accent-red);
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.warning-text {
+  color: var(--dark-red);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  padding-left: 43px;
+  font-family: 'Forum', serif;
+}
+
+.warning-text p {
+  margin: 10px 0;
+  padding-left: 15px;
+  position: relative;
+}
+
+.warning-text p::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent-red);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* Карточка типов дегустации */
+.tasting-types {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.tasting-type {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  background: rgba(139, 0, 0, 0.05);
+  border-radius: 15px;
+  border-left: 5px solid var(--primary-red);
+  transition: all 0.3s ease;
+}
+
+.tasting-type:hover {
+  background: rgba(139, 0, 0, 0.1);
+  transform: translateX(5px);
+}
+
+.tasting-icon {
+  font-size: 1.8rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+  color: var(--primary-red);
+}
+
+.tasting-info h4 {
+  color: var(--brown);
+  margin: 0 0 6px 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  font-family: 'Forum', serif;
+}
+
+.tasting-info p {
+  color: var(--light-brown);
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 1100px) {
+  .reservation-content {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+  
+  .reservation-info-section {
+    position: static;
+  }
+  
+  .reservation-header h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .reservation-container {
+    padding: 20px 15px 60px;
+  }
+  
+  .reservation-header h1 {
+    font-size: 2.5rem;
+    padding-bottom: 15px;
+  }
+  
+  .reservation-header h1::before,
+  .reservation-header h1::after {
+    display: none;
+  }
+  
+  .reservation-form-section {
+    padding: 30px;
+  }
+  
+  .form-row-double {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  
+  .info-card {
+    padding: 25px;
+  }
+  
+  .field-label {
+    font-size: 1.2rem;
+  }
+  
+  .radio-label {
+    min-width: 100%;
+  }
+  
+  .service-checkbox-label {
+    flex-wrap: wrap;
+  }
+  
+  .service-info {
+    width: 100%;
+    order: 1;
+    margin-top: 10px;
+  }
+  
+  .service-icon {
+    order: 2;
+  }
+  
+  .submit-btn {
+    padding: 22px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .reservation-header h1 {
+    font-size: 2rem;
+  }
+  
+  .header-subtitle {
+    font-size: 1.1rem;
+    padding: 0 10px;
+  }
+  
+  .reservation-form-section {
+    padding: 20px;
+    border-radius: 20px;
+  }
+  
+  .form-input,
+  .form-textarea,
+  .form-select {
+    padding: 16px 18px;
+    font-size: 1rem;
+  }
+  
+  .form-section-title {
+    font-size: 1.5rem;
+  }
+  
+  .field-label {
+    font-size: 1.1rem;
+  }
+  
+  .radio-label,
+  .service-checkbox-label {
+    padding: 16px;
+  }
+  
+  .contact-item {
+    padding: 16px;
+  }
+  
+  .submit-btn {
+    padding: 20px;
+    font-size: 1.1rem;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .info-card {
+    padding: 20px;
+  }
+  
+  .info-card h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Стили для модального окна (попап) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--wood);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.modal-icon.success {
+  color: #28a745;
+}
+
+.modal-icon.error {
+  color: var(--accent-red);
+}
+
+.modal-title {
+  text-align: center;
+  color: var(--brown);
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  font-family: 'Zabava', cursive;
+}
+
+.modal-message {
+  text-align: center;
+  color: var(--text-medium);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.modal-button {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Forum', serif;
+}
+
+.modal-button.primary {
+  background: var(--primary-red);
+  color: var(--white);
+  min-width: 120px;
+}
+
+.modal-button.primary:hover {
+  background: var(--dark-red);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139, 0, 0, 0.3);
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--text-medium);
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+  color: var(--primary-red);
+}
+
+/* Стили для предложений альтернативных дат */
+.suggestions-section {
+  background: rgba(139, 0, 0, 0.05);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 20px 0;
+  border: 2px solid var(--primary-red);
+}
+
+.suggestions-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.suggestions-header h4 {
+  color: var(--primary-red);
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.suggestions-icon {
+  color: var(--accent-red);
+  width: 20px;
+  height: 20px;
+}
+
+.suggestions-subtitle {
+  color: var(--brown);
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+.suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.suggestion-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  background: var(--white);
+  border-radius: 12px;
+  border: 2px solid var(--wood);
+  transition: all 0.3s ease;
+}
+
+.suggestion-item:hover {
+  border-color: var(--primary-red);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139, 0, 0, 0.1);
+}
+
+.suggestion-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.available-icon {
+  color: #28a745;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.suggestion-time {
+  color: var(--brown);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.suggestion-message {
+  color: var(--text-medium);
+  font-size: 0.9rem;
+}
+
+.select-suggestion-btn {
+  padding: 10px 20px;
+  background: var(--primary-red);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.select-suggestion-btn:hover {
+  background: var(--dark-red);
+  transform: translateY(-2px);
+}
+
+/* Простая ошибка */
+.simple-error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: rgba(204, 51, 51, 0.1);
+  border-radius: 12px;
+  border-left: 5px solid var(--accent-red);
+  margin: 10px 0;
+}
+
+.error-icon-small {
+  color: var(--accent-red);
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.error-text {
+  color: var(--dark-red);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* Для типов дегустации */
+.age-warning {
+  background: var(--accent-red);
+  color: var(--white);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.tasting-type-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.tasting-radio {
+  min-width: 200px !important;
+}
+
+/* Адаптивность для модального окна */
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 30px 20px;
+    width: 95%;
+  }
+  
+  .modal-title {
+    font-size: 1.5rem;
+  }
+  
+  .modal-message {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+  
+  .modal-button {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+  
+  .suggestion-item {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .select-suggestion-btn {
+    align-self: flex-end;
+  }
+}
+
+/* Дополнительные стили для исправленного фронтенда */
+
+/* Ошибки полей */
+.field-error {
+  color: var(--accent-red);
+  font-size: 0.9rem;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.form-input.error,
+.form-textarea.error,
+.form-select.error {
+  border-color: var(--accent-red);
+  background: rgba(204, 51, 51, 0.05);
+}
+
+/* Информация о бронировании */
+.booking-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background: rgba(91, 11, 11, 0.05);
+  border-radius: 12px;
+  border-left: 4px solid var(--dark-red);
+  color: var(--dark-red);
+  font-size: 0.95rem;
+  margin: 10px 0;
+}
+
+.booking-info svg {
+  color: var(--dark-red);
+  flex-shrink: 0;
+}
+
+/* Стили для загрузки */
+.loading-spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Для времени в предложениях */
+.suggestion-item .suggestion-time {
+  font-family: 'Forum', serif;
+  font-weight: 600;
+}
+
+/* Субтитры и подсказки */
+.time-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-medium);
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+.header-subtitle {
+  color: var(--light-brown);
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 20px auto 0;
+  line-height: 1.6;
+  font-family: 'Forum', serif;
+  text-align: center;
+}
+
+/* Бадж для необязательных полей */
+.optional-badge {
+  background: var(--wood);
+  color: var(--brown);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  margin-left: 10px;
+  font-family: 'Forum', serif;
+}
+
+/* Адаптивность для предложений */
+@media (max-width: 768px) {
+  .suggestion-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+  
+  .select-suggestion-btn {
+    align-self: flex-end;
+  }
+  
+  .booking-info {
+    font-size: 0.9rem;
+    padding: 12px;
+  }
+}
+
+/* Для разных типов дегустации */
+.tasting-radio {
+  position: relative;
+}
+
+.tasting-radio .age-warning {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--accent-red);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+/* Обновляем стили модального окна для лучшего отображения */
+.modal-content {
+  max-width: 450px;
+}
+
+.modal-message {
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 25px 15px;
+  }
+  
+  .modal-title {
+    font-size: 1.4rem;
+  }
+  
+  .modal-message {
+    font-size: 1rem;
+    padding: 0;
+  }
+}

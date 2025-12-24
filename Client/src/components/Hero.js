@@ -1,24 +1,38 @@
 import "../styles/hero.css";
+import React from "react";
+import hero from "../img/hero.png";
+import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
-    return (
-        <section className="hero">
-            <div className="hero-content">
-            <h1>ГРАФ СУВОРОВ</h1>
-            <div className="hero-divider"></div>
-            <h2 className="hero-subtitle">Традиционная русская медовая палата</h2>
-            <div className="hero-divider"></div>
-            <p className="hero-text">
-                Погрузитесь в атмосферу старинной России в самом сердце Суздаля. 
-                Отведайте легендарные медовые напитки по рецептам XVII века, русские \
-                пряники и блюда традиционной кухни.
-            </p>
-        <div className="hero-buttons">
-          <button className="btn btn-primary" href="">Забронировать дегустацию</button>
-          <button className="btn btn-secondary">Посмотреть меню</button>
-        </div>
-        </div>
+  const navigate = useNavigate();
+  return (
+    <section className="hero">
+      <img className="hero-img" src={hero} alt="background" />
+      <div className="hero-content">
+        <h1 className="hero-title">Граф Суворов</h1>
+      </div>
+      <div className="hero-subtitle3">
+        <p>
+          География походов великого полководца на Вашем столе! В самом
+          сердце Суздаля
+        </p>
+      </div>
 
-        </section>
-    )
+      <div className="hero-subtitle2">
+        <p>
+          Отведайте легендарные медовые напитки XVII века, и блюда традиционной
+          кухни.
+        </p>
+      </div>
+
+      <div className="btn">
+        <button className="btn-primary" onClick={() => navigate("/tasting")}>
+          Забронировать дегустацию
+        </button>
+        <button className="btn-second" onClick={() => navigate("/menu")}>
+          Смотреть меню
+        </button>
+      </div>
+    </section>
+  );
 }

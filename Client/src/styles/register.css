@@ -1,0 +1,744 @@
+/* register.css */
+/* Основные стили и шрифты */
+@import url('https://fonts.googleapis.com/css2?family=Zabava&family=Forum&display=swap');
+
+:root {
+  --primary-red: #8b0000;
+  --dark-red: #5a0b0b;
+  --light-red: #b22222;
+  --gold: #ffd700;
+  --light-gold: #ffed4e;
+  --cream: #f9f2e8;
+  --beige: #f5e6d3;
+  --brown: #3d1c0f;
+  --light-brown: #5a3c2d;
+  --wood: #e6c9a8;
+  --shadow: rgba(139, 0, 0, 0.15);
+  --page-bg: #f9f2e8;
+  --white: #ffffff;
+  --success-green: #2E7D32;
+  --error-red: #c62828;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--page-bg);
+  font-family: 'Forum', serif;
+  color: var(--brown);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== КОНТЕЙНЕР РЕГИСТРАЦИИ ===== */
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  background-color: var(--page-bg);
+}
+
+.register-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 30%, var(--shadow) 1px, transparent 1px),
+    radial-gradient(circle at 80% 70%, var(--shadow) 1px, transparent 1px);
+  background-size: 150px 150px, 200px 200px;
+  opacity: 0.08;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.register-content {
+  background: var(--white);
+  border-radius: 30px;
+  padding: 50px;
+  box-shadow: 0 25px 60px var(--shadow);
+  border: 3px solid var(--wood);
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  z-index: 2;
+  animation: formAppear 0.8s ease-out;
+}
+
+@keyframes formAppear {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.register-content::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 32px;
+  background: linear-gradient(45deg, 
+    var(--primary-red), 
+    var(--gold), 
+    var(--primary-red));
+  z-index: -1;
+  opacity: 0.1;
+}
+
+/* ===== ШАПКА РЕГИСТРАЦИИ ===== */
+.register-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.register-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.logo-icon {
+  color: var(--gold);
+  font-size: 2.5rem;
+  filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.2));
+}
+
+.logo-title {
+  font-family: 'Zabava', cursive;
+  color: var(--primary-red);
+  font-size: 2.8rem;
+  margin: 0;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.register-subtitle {
+  color: var(--light-brown);
+  font-size: 1.3rem;
+  margin-bottom: 25px;
+  font-family: 'Forum', serif;
+  letter-spacing: 0.5px;
+}
+
+.header-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 300px;
+}
+
+.divider-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    var(--primary-red), 
+    var(--primary-red), 
+    transparent);
+  position: relative;
+  overflow: hidden;
+}
+
+.divider-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(139, 0, 0, 0.3), 
+    transparent);
+  animation: shimmer 3s infinite;
+}
+
+.divider-icon {
+  margin: 0 20px;
+  font-size: 1.8rem;
+  color: var(--primary-red);
+}
+
+/* ===== ФОРМА РЕГИСТРАЦИИ ===== */
+.register-form-wrapper {
+  margin-bottom: 30px;
+}
+
+/* Сообщения об ошибках и успехе */
+.register-error {
+  background: linear-gradient(135deg, var(--error-red), #b71c1c);
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  animation: slideIn 0.4s ease-out;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 5px 20px rgba(198, 40, 40, 0.2);
+}
+
+.register-success {
+  background: linear-gradient(135deg, var(--success-green), #1B5E20);
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  animation: slideIn 0.4s ease-out;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 5px 20px rgba(46, 125, 50, 0.2);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-icon, .success-icon {
+  background: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 15px;
+  font-size: 16px;
+  flex-shrink: 0;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.error-icon {
+  color: var(--error-red);
+}
+
+.success-icon {
+  color: var(--success-green);
+}
+
+.error-text, .success-text {
+  flex: 1;
+  font-weight: 500;
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+/* Форма */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+@media (max-width: 480px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.form-group {
+  position: relative;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--primary-red);
+  font-size: 1.2rem;
+  z-index: 1; /* Изменено с 2 на 1 */
+  pointer-events: none;
+}
+
+.form-input {
+  width: 100%;
+  padding: 16px 20px 16px 60px; /* Изменены отступы */
+  border: 2px solid var(--wood);
+  border-radius: 15px;
+  font-size: 1.1rem;
+  background: var(--cream);
+  transition: all 0.4s ease;
+  font-family: 'Forum', serif;
+  color: var(--brown);
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+.form-input:focus {
+  border-color: var(--primary-red);
+  background: var(--white);
+  box-shadow: 0 0 0 4px rgba(139, 0, 0, 0.1);
+  outline: none;
+  padding-top: 24px; /* Уменьшено */
+  padding-bottom: 8px; /* Уменьшено */
+}
+
+/* Исправленные стили для плавающих меток */
+.floating-label {
+  position: absolute;
+  top: 50%;
+  left: 60px;
+  transform: translateY(-50%);
+  color: var(--light-brown);
+  font-size: 1.1rem;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+  z-index: 2;
+  padding: 0 5px;
+  opacity: 0.8;
+  background-color: transparent; /* Прозрачный фон по умолчанию */
+}
+
+.form-input:focus + .floating-label,
+.form-input:not(:placeholder-shown) + .floating-label {
+  top: 8px;
+  left: 60px;
+  font-size: 0.75rem; /* Уменьшен шрифт */
+  color: var(--primary-red);
+  opacity: 1;
+  font-weight: 600;
+  background-color: var(--cream); /* Добавлен фон */
+  padding: 0 8px;
+  border-radius: 4px;
+  transform: translateY(0);
+}
+
+/* Для заполненных полей без фокуса */
+.form-input:not(:focus):not(:placeholder-shown) + .floating-label {
+  top: 8px;
+  left: 60px;
+  font-size: 0.75rem;
+  color: var(--light-brown);
+  opacity: 0.9;
+  background-color: var(--cream);
+  padding: 0 8px;
+  border-radius: 4px;
+  transform: translateY(0);
+}
+
+.input-error {
+  border-color: var(--error-red) !important;
+  background: #fff8f8 !important;
+}
+
+.validation-error {
+  color: var(--error-red);
+  font-size: 0.9rem;
+  margin-top: 8px;
+  padding-left: 5px;
+  font-weight: 500;
+}
+
+.password-hint {
+  font-size: 0.9rem;
+  color: var(--light-brown);
+  margin-top: 8px;
+  padding-left: 5px;
+  font-style: italic;
+}
+
+/* Кнопка регистрации */
+.register-button {
+  width: 100%;
+  padding: 22px;
+  background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+  color: var(--white);
+  border: none;
+  border-radius: 15px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  box-shadow: 0 10px 30px rgba(139, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+  font-family: 'Zabava', cursive;
+  margin-top: 10px;
+}
+
+.register-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 215, 0, 0.3), 
+    transparent);
+  transition: left 0.6s;
+}
+
+.register-button:hover::before {
+  left: 100%;
+}
+
+.register-button:hover:not(.loading) {
+  background: linear-gradient(135deg, var(--dark-red), var(--primary-red));
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(139, 0, 0, 0.35);
+}
+
+.register-button.loading {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.register-button:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Ссылки */
+.register-links {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 25px;
+  border-top: 2px solid var(--wood);
+}
+
+.login-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  background: rgba(139, 0, 0, 0.05);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--brown);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  font-weight: 500;
+}
+
+.login-link:hover {
+  background: rgba(139, 0, 0, 0.1);
+  border-color: var(--primary-red);
+  transform: translateX(5px);
+}
+
+.link-arrow {
+  color: var(--primary-red);
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.login-link:hover .link-arrow {
+  transform: translateX(5px);
+}
+
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  background: var(--cream);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--light-brown);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  font-weight: 500;
+}
+
+.back-link:hover {
+  background: rgba(139, 0, 0, 0.05);
+  border-color: var(--wood);
+  color: var(--brown);
+  transform: translateX(-5px);
+}
+
+.back-link svg {
+  color: var(--primary-red);
+  font-size: 1.2rem;
+}
+
+/* Футер */
+.register-footer {
+  margin-top: 30px;
+  padding-top: 25px;
+  border-top: 1px solid var(--wood);
+  text-align: center;
+}
+
+.footer-text {
+  color: var(--light-brown);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+/* Декоративные элементы */
+.register-decoration {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.decoration-ornament {
+  position: absolute;
+  background: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M50,5 Q65,20 80,5 Q95,20 95,35 Q80,50 95,65 Q95,80 80,95 Q65,80 50,95 Q35,80 20,95 Q5,80 5,65 Q20,50 5,35 Q5,20 20,5 Q35,20 50,5Z" fill="%238b0000" opacity="0.03"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.ornament-1 {
+  width: 200px;
+  height: 200px;
+  top: 10%;
+  left: 5%;
+  animation: float 20s ease-in-out infinite;
+}
+
+.ornament-2 {
+  width: 150px;
+  height: 150px;
+  bottom: 15%;
+  right: 8%;
+  animation: float 25s ease-in-out infinite reverse;
+}
+
+.ornament-3 {
+  width: 100px;
+  height: 100px;
+  top: 50%;
+  left: 85%;
+  animation: float 30s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(180deg);
+  }
+}
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 768px) {
+  .register-content {
+    padding: 35px 25px;
+    max-width: 450px;
+  }
+  
+  .logo-title {
+    font-size: 2.2rem;
+  }
+  
+  .register-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .form-input {
+    padding: 14px 18px 14px 55px;
+    font-size: 1rem;
+  }
+  
+  .form-input:focus {
+    padding-top: 22px;
+    padding-bottom: 6px;
+  }
+  
+  .register-button {
+    padding: 20px;
+    font-size: 1.1rem;
+  }
+  
+  .ornament-1,
+  .ornament-2,
+  .ornament-3 {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-content {
+    padding: 25px 20px;
+    border-radius: 25px;
+  }
+  
+  .logo-title {
+    font-size: 1.8rem;
+  }
+  
+  .logo-icon {
+    font-size: 2rem;
+  }
+  
+  .register-subtitle {
+    font-size: 1rem;
+  }
+  
+  .form-input {
+    padding: 12px 16px 12px 50px;
+  }
+  
+  .form-input:focus {
+    padding-top: 20px;
+    padding-bottom: 4px;
+  }
+  
+  .register-button {
+    padding: 18px;
+    font-size: 1rem;
+  }
+  
+  .login-link,
+  .back-link {
+    padding: 12px 15px;
+    font-size: 0.95rem;
+  }
+  
+  .error-text,
+  .success-text {
+    font-size: 0.95rem;
+  }
+}
+
+/* Анимация шиммера для полей */
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Стили для ссылок */
+a {
+  color: var(--primary-red);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--dark-red);
+  text-decoration: underline;
+}
+
+/* Общие стили для полей ввода */
+input::placeholder {
+  color: var(--light-brown);
+  opacity: 0.6;
+}
+
+/* Убираем стандартный плейсхолдер при фокусе */
+.form-input:focus::placeholder {
+  opacity: 0.3;
+}
+
+/* Стили для иконок внутри кнопки */
+.register-button svg {
+  font-size: 1.2rem;
+}
+
+/* Анимация для фокуса на полях ввода */
+@keyframes inputFocusGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(139, 0, 0, 0.3);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(139, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(139, 0, 0, 0);
+  }
+}
+
+.form-input:focus {
+  animation: inputFocusGlow 1s ease;
+}
+
+/* Дополнительные исправления для лучшей видимости */
+.form-input {
+  line-height: 1.5;
+}
+
+/* Убедимся, что текст виден поверх всего */
+.form-input:not(:placeholder-shown) {
+  padding-top: 24px;
+  padding-bottom: 8px;
+}
+
+/* Плавный переход для плейсхолдера */
+.form-input::placeholder {
+  transition: opacity 0.3s ease;
+}
+
+/* Убираем плейсхолдер при вводе текста */
+.form-input:not(:placeholder-shown)::placeholder {
+  opacity: 0;
+}
