@@ -24,10 +24,11 @@ const Reservation = () => {
   });
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [reservationInfo, setReservationInfo] = useState();
-  const [showTimeSuggestions, setShowTimeSuggestions] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalType, setModalType] = useState('');
+  const [timeSuggestions, setTimeSuggestions] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const reservationTypes = [
     { value: 'table', label: 'Бронирование стола' },
@@ -59,13 +60,36 @@ const Reservation = () => {
     return 'гостей';
   }
 
+  const getMinDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const getMaxDate = () => {
+    const maxDate = new Date();
+    maxDate.setDate(maxDate.getDate() + 90);
+    const year = maxDate.getFullYear();
+    const month = String(maxDate.getMonth() + 1).padStart(2, '0');
+    const day = String(maxDate.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-    setError(null);
+    // Очищаем ошибки при изменении
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+    if (name === 'date' || name === 'time') {
+      setTimeSuggestions([]);
+    }
   };
 
   const handleCheckboxChange = (serviceValue) => {
@@ -87,121 +111,265 @@ const Reservation = () => {
   };
 
   const validateForm = () => {
-    const errors = [];
+    const newErrors = {};
 
     if (!formData.name.trim()) {
-      errors.push('Введите имя и отчество');
+      newErrors.name = 'Введите имя и отчество';
     }
 
     if (!formData.phone.trim()) {
-      errors.push('Введите телефон');
+      newErrors.phone = 'Введите телефон';
     } else if (!/^[\d\s()+-\s]+$/.test(formData.phone)) {
-      errors.push('Введите корректный номер телефона');
+      newErrors.phone = 'Введите корректный номер телефона';
+    }
+
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Введите корректный email';
     }
 
     if (!formData.date) {
-      errors.push('Выберите дату');
+      newErrors.date = 'Выберите дату';
     }
 
     if (!formData.time) {
-      errors.push('Выберите время');
-    } else {
-      const selectedDateTime = new Date(`${formData.date}T${formData.time}`);
+      newErrors.time = 'Выберите время';
+    } else if (formData.date) {
+      const selectedDateTime = new Date(`${formData.date}T${formData.time}:00`);
       const now = new Date();
+      const minDateTime = new Date(now.getTime() + 2 * 60 * 60 * 1000);
       
-      if (selectedDateTime <= now) {
-        errors.push('Выберите дату и время в будущем');
+      if (selectedDateTime <= minDateTime) {
+        newErrors.time = 'Бронирование должно быть минимум за 2 часа от текущего времени';
       }
-
-      const hour = selectedDateTime.getHours();
+      
+      const hour = parseInt(formData.time.split(':')[0]);
       if (hour < 12 || hour > 23) {
-        errors.push('Время работы ресторана: 12:00 - 23:00');
+        newErrors.time = 'Время работы ресторана: 12:00 - 23:00';
       }
     }
 
-    if (!formData.guests || parseInt(formData.guests) < 1 || parseInt(formData.guests) > 50) {
-      errors.push('Выберите количество гостей (1-50)');
+    if (!formData.guests || parseInt(formData.guests) < 1 || parseInt(formData.guests) > 20) {
+      newErrors.guests = 'Выберите количество гостей (1-20)';
     }
 
-    return errors;
+    return newErrors;
+  };
+
+  const showPopup = (message, type = 'error') => {
+    setModalMessage(message);
+    setModalType(type);
+    setShowModal(true);
+  };
+
+  // Упрощенная функция для форматирования даты
+  const formatSuggestionDate = (suggestion) => {
+    console.log('Форматируем предложение:', suggestion);
+    
+    try {
+      // Если у предложения есть поле Message, используем его
+      if (suggestion.Message) {
+        return suggestion.Message;
+      }
+      
+      // Если у предложения есть поле message, используем его
+      if (suggestion.message) {
+        return suggestion.message;
+      }
+      
+      // Пробуем получить дату из разных полей
+      let dateTimeString;
+      
+      if (suggestion.DateTime) {
+        dateTimeString = suggestion.DateTime;
+      } else if (suggestion.dateTime) {
+        dateTimeString = suggestion.dateTime;
+      } else if (suggestion.time) {
+        dateTimeString = suggestion.time;
+      } else if (suggestion.DisplayTime) {
+        // Если это уже отформатированное время
+        return suggestion.DisplayTime;
+      } else {
+        // Если ничего не подошло, возвращаем запасной вариант
+        return 'Доступное время';
+      }
+      
+      console.log('Дата/время строка:', dateTimeString);
+      
+      // Преобразуем строку в дату
+      const date = new Date(dateTimeString);
+      
+      // Проверяем валидность
+      if (isNaN(date.getTime())) {
+        console.error('Некорректная дата:', dateTimeString);
+        return 'Некорректная дата';
+      }
+      
+      // Форматируем для отображения
+      return date.toLocaleString('ru-RU', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
+    } catch (error) {
+      console.error('Ошибка форматирования даты:', error, suggestion);
+      return 'Ошибка даты';
+    }
+  };
+
+  // Упрощенная функция для обработки выбора предложения
+  const handleTimeSuggestionSelect = (suggestion) => {
+    console.log('Выбрано предложение:', suggestion);
+    
+    try {
+      // Пытаемся получить дату из сообщения
+      let dateString = '';
+      let timeString = '';
+      
+      // Если есть Message, пытаемся извлечь время
+      if (suggestion.Message) {
+        const message = suggestion.Message;
+        console.log('Анализируем сообщение:', message);
+        
+        // Пытаемся найти время в формате HH:mm
+        const timeMatch = message.match(/(\d{1,2}):(\d{2})/);
+        if (timeMatch) {
+          const hours = timeMatch[1].padStart(2, '0');
+          const minutes = timeMatch[2];
+          timeString = `${hours}:${minutes}`;
+          
+          // Определяем дату на основе сообщения
+          const today = new Date();
+          let targetDate = new Date(today);
+          
+          if (message.includes('Завтра') || message.includes('завтра')) {
+            targetDate.setDate(today.getDate() + 1);
+          } else if (message.includes('Сегодня') || message.includes('сегодня')) {
+            // Оставляем сегодняшнюю дату
+          }
+          
+          dateString = targetDate.toISOString().split('T')[0];
+        }
+      }
+      
+      // Если не удалось извлечь из сообщения, пробуем другие поля
+      if (!dateString && suggestion.DateTime) {
+        const date = new Date(suggestion.DateTime);
+        if (!isNaN(date.getTime())) {
+          dateString = date.toISOString().split('T')[0];
+          timeString = date.toTimeString().slice(0, 5);
+        }
+      }
+      
+      // Если все еще нет даты, используем текущую
+      if (!dateString) {
+        const today = new Date();
+        dateString = today.toISOString().split('T')[0];
+      }
+      
+      // Если нет времени, устанавливаем 14:00 по умолчанию
+      if (!timeString) {
+        timeString = '14:00';
+      }
+      
+      console.log('Устанавливаем дату/время:', { dateString, timeString });
+      
+      setFormData(prev => ({
+        ...prev,
+        date: dateString,
+        time: timeString
+      }));
+      
+      setTimeSuggestions([]);
+      setErrors(prev => ({ ...prev, time: '' }));
+      
+      // Прокручиваем к полю времени
+      setTimeout(() => {
+        const timeInput = document.getElementById('time');
+        if (timeInput) {
+          timeInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
+      
+    } catch (error) {
+      console.error('Ошибка при выборе предложения:', error);
+      showPopup('Ошибка при выборе времени', 'error');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    const validationErrors = validateForm();
-    if (validationErrors.length > 0) {
-      setError({ 
-        message: validationErrors[0],
-        details: validationErrors.slice(1)
-      });
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
       return;
     }
 
     setLoading(true);
-    setError(null);
-    setSuccess(false);
-    setShowTimeSuggestions(false);
-
-    // Формируем полную дату и время
-    const reservationDateTime = new Date(`${formData.date}T${formData.time}:00`);
-    
-    // Формируем тип брони
-    const type = formData.reservationType === 'table' 
-      ? 'Бронирование стола' 
-      : `Дегустация: ${tastingTypes.find(t => t.value === formData.tastingType)?.label}`;
-
-    // Формируем дополнительные услуги
-    let additionalServicesText = '';
-    if (formData.reservationType === 'tasting' && formData.additionalServices.length > 0) {
-      additionalServicesText = formData.additionalServices.map(s => {
-        const service = additionalServices.find(as => as.value === s);
-        return service ? service.label : s;
-      }).join(', ');
-    }
-
-    // Формируем специальные запросы
-    let specialRequests = formData.specialRequests.trim();
-    if (additionalServicesText) {
-      specialRequests = specialRequests 
-        ? `${specialRequests}\n\nДополнительные услуги: ${additionalServicesText}`
-        : `Дополнительные услуги: ${additionalServicesText}`;
-    }
-
-    // Подготавливаем данные для отправки
-    const reservationData = {
-      type: type,
-      reservationDateTime: reservationDateTime.toISOString(),
-      guestsCount: parseInt(formData.guests),
-      customerName: formData.name.trim(),
-      customerPhone: formData.phone.trim(),
-      customerEmail: formData.email?.trim() || null,
-      specialRequests: specialRequests || null,
-      additionalServices: additionalServicesText || null
-    };
-
-    console.log('Отправляемые данные:', reservationData);
+    setErrors({});
+    setTimeSuggestions([]);
 
     try {
+      // Формируем дату и время
+      const datePart = formData.date;
+      const timePart = formData.time;
+      
+      if (!datePart || !timePart) {
+        throw new Error('Не указана дата или время');
+      }
+
+      // Создаем дату в локальном часовом поясе
+      const localDateTime = new Date(`${datePart}T${timePart}:00`);
+      
+      // Преобразуем в ISO строку для сервера
+      const isoDateTime = localDateTime.toISOString();
+
+      const type = formData.reservationType === 'table' 
+        ? 'Бронирование стола' 
+        : `Дегустация: ${tastingTypes.find(t => t.value === formData.tastingType)?.label}`;
+
+      let additionalServicesText = '';
+      if (formData.reservationType === 'tasting' && formData.additionalServices.length > 0) {
+        additionalServicesText = formData.additionalServices.map(s => {
+          const service = additionalServices.find(as => as.value === s);
+          return service ? service.label : s;
+        }).join(', ');
+      }
+
+      let specialRequests = formData.specialRequests.trim();
+      if (additionalServicesText) {
+        specialRequests = specialRequests 
+          ? `${specialRequests}\n\nДополнительные услуги: ${additionalServicesText}`
+          : `Дополнительные услуги: ${additionalServicesText}`;
+      }
+
+      const reservationData = {
+        type: type,
+        reservationDateTime: isoDateTime,
+        guestsCount: parseInt(formData.guests),
+        customerName: formData.name.trim(),
+        customerPhone: formData.phone.trim(),
+        customerEmail: formData.email?.trim() || null,
+        specialRequests: specialRequests || null,
+        additionalServices: additionalServicesText || null
+      };
+
+      console.log('Отправляемые данные:', reservationData);
+
       const response = await axios.post(`${API_BASE_URL}/reservations`, reservationData, {
         headers: {
           'Content-Type': 'application/json'
         },
-        timeout: 10000 // 10 секунд таймаут
+        timeout: 10000
       });
 
       console.log('Ответ сервера:', response.data);
 
       if (response.data.success) {
-        setSuccess(true);
-        setReservationInfo({
-          id: response.data.reservationId,
-          code: response.data.reservationCode,
-          type: type,
-          dateTime: reservationDateTime,
-          guests: formData.guests,
-          name: formData.name
-        });
+        showPopup(response.data.message || 'Бронирование создано успешно! Мы свяжемся с вами для подтверждения.', 'success');
         
         // Сброс формы
         setFormData({
@@ -217,68 +385,73 @@ const Reservation = () => {
           additionalServices: []
         });
       } else {
-        setError({ 
-          message: response.data.error || 'Произошла ошибка при бронировании'
-        });
+        showPopup(response.data.error || 'Произошла ошибка при бронировании', 'error');
       }
       
     } catch (error) {
       console.error('Ошибка запроса:', error);
       
-      let errorMessage = 'Произошла ошибка при бронировании. Пожалуйста, попробуйте еще раз.';
-      let suggestions = null;
-      
-      if (error.response) {
-        console.error('Данные ответа:', error.response.data);
+      if (error.response?.data) {
+        console.log('Данные ошибки:', error.response.data);
         
-        if (error.response.data?.error) {
-          errorMessage = error.response.data.error;
-        } else if (error.response.data?.message) {
-          errorMessage = error.response.data.message;
-        }
-        
-        if (error.response.data?.suggestions) {
-          suggestions = error.response.data.suggestions;
-          setShowTimeSuggestions(true);
-        }
-        
-        if (error.response.data?.details) {
-          console.error('Детали ошибки:', error.response.data.details);
+        if (error.response.data.suggestions) {
+          console.log('Получены предложения:', error.response.data.suggestions);
+          // Отладочная информация о структуре предложений
+          if (error.response.data.suggestions.length > 0) {
+            console.log('Первое предложение:', error.response.data.suggestions[0]);
+            console.log('Ключи первого предложения:', Object.keys(error.response.data.suggestions[0]));
+          }
+          setTimeSuggestions(error.response.data.suggestions);
+          showPopup(error.response.data.error || 'Выбранное время недоступно. Пожалуйста, выберите одно из предложенных времен.', 'error');
+        } else {
+          showPopup(error.response.data.error || 'Произошла ошибка при бронировании', 'error');
         }
       } else if (error.request) {
-        errorMessage = 'Не удалось подключиться к серверу. Проверьте подключение к интернету.';
+        showPopup('Не удалось подключиться к серверу. Проверьте подключение к интернету.', 'error');
       } else {
-        errorMessage = error.message;
+        showPopup('Произошла непредвиденная ошибка. Пожалуйста, попробуйте еще раз.', 'error');
       }
-      
-      setError({ 
-        message: errorMessage,
-        suggestions: suggestions
-      });
     } finally {
       setLoading(false);
     }
   };
 
-  const formatDateTime = (date) => {
-    return date.toLocaleString('ru-RU', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
+  // Модальное окно
+  const Modal = () => {
+    if (!showModal) return null;
 
-  const handleTimeSuggestionSelect = (suggestion) => {
-    const date = new Date(suggestion.DateTime);
-    setFormData(prev => ({
-      ...prev,
-      date: date.toISOString().split('T')[0],
-      time: date.toTimeString().slice(0, 5)
-    }));
-    setShowTimeSuggestions(false);
-    setError(null);
+    return (
+      <div className="modal-overlay" onClick={() => setShowModal(false)}>
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className={`modal-icon ${modalType}`}>
+            {modalType === 'success' ? (
+              <CheckCircle size={48} />
+            ) : (
+              <AlertTriangle size={48} />
+            )}
+          </div>
+          <h3 className="modal-title">
+            {modalType === 'success' ? 'Успешно!' : 'Внимание!'}
+          </h3>
+          <p className="modal-message">{modalMessage}</p>
+          <div className="modal-actions">
+            <button 
+              className="modal-button primary"
+              onClick={() => setShowModal(false)}
+            >
+              ОК
+            </button>
+          </div>
+          <button 
+            className="modal-close"
+            onClick={() => setShowModal(false)}
+            aria-label="Закрыть"
+          >
+            <XCircle size={24} />
+          </button>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -288,146 +461,7 @@ const Reservation = () => {
         <div className="header-divider"></div>
       </div>
 
-      {/* Сообщение об успехе */}
-      {success && reservationInfo && (
-        <div className="success-message">
-          <CheckCircle className="success-icon" />
-          <div className="success-content">
-            <h3>Бронирование успешно создано!</h3>
-            <p>Мы свяжемся с вами в течение 30 минут для подтверждения.</p>
-            
-            <div className="reservation-details">
-              <div className="detail-item">
-                <span className="detail-label">Номер брони:</span>
-                <span className="detail-value">#{reservationInfo.id}</span>
-              </div>
-              <div className="detail-item">
-                <span className="detail-label">Код бронирования:</span>
-                <span className="detail-value code">{reservationInfo.code}</span>
-              </div>
-              <div className="detail-item">
-                <span className="detail-label">Тип:</span>
-                <span className="detail-value">{reservationInfo.type}</span>
-              </div>
-              <div className="detail-item">
-                <span className="detail-label">Дата и время:</span>
-                <span className="detail-value">{formatDateTime(reservationInfo.dateTime)}</span>
-              </div>
-              <div className="detail-item">
-                <span className="detail-label">Количество гостей:</span>
-                <span className="detail-value">{reservationInfo.guests}</span>
-              </div>
-              <div className="detail-item">
-                <span className="detail-label">Имя:</span>
-                <span className="detail-value">{reservationInfo.name}</span>
-              </div>
-            </div>
-            
-            <div className="success-note">
-              <Info size={16} />
-              <span>Пожалуйста, сохраните код бронирования. Он потребуется при обращении в ресторан.</span>
-            </div>
-          </div>
-          <button 
-            onClick={() => setSuccess(false)} 
-            className="close-success"
-            aria-label="Закрыть"
-          >
-            <XCircle />
-          </button>
-        </div>
-      )}
-
-      {/* Сообщение об ошибке */}
-      {error && !showTimeSuggestions && (
-        <div className="error-message">
-          <AlertTriangle className="error-icon" />
-          <div className="error-content">
-            <h3>Ошибка бронирования</h3>
-            <p>{error.message}</p>
-            {error.details && error.details.length > 0 && (
-              <ul className="error-details">
-                {error.details.map((detail, index) => (
-                  <li key={index}>{detail}</li>
-                ))}
-              </ul>
-            )}
-            {error.suggestions && (
-              <button 
-                onClick={() => setShowTimeSuggestions(true)}
-                className="show-suggestions-btn"
-              >
-                Показать альтернативные варианты времени
-              </button>
-            )}
-          </div>
-          <button 
-            onClick={() => setError(null)} 
-            className="close-error"
-            aria-label="Закрыть"
-          >
-            <XCircle />
-          </button>
-        </div>
-      )}
-
-      {/* Предложения по времени */}
-      {showTimeSuggestions && error?.suggestions && (
-        <div className="suggestions-overlay">
-          <div className="suggestions-modal">
-            <div className="suggestions-header">
-              <AlertTriangle className="suggestions-icon" />
-              <h3>Выбранное время недоступно</h3>
-              <button 
-                onClick={() => setShowTimeSuggestions(false)} 
-                className="close-suggestions"
-                aria-label="Закрыть"
-              >
-                <XCircle />
-              </button>
-            </div>
-            
-            <p className="suggestions-subtitle">Предлагаем альтернативные варианты:</p>
-            
-            <div className="suggestions-list">
-              {error.suggestions.map((suggestion, index) => (
-                <div key={index} className="suggestion-item">
-                  <div className="suggestion-info">
-                    <CheckCircle className="available-icon" />
-                    <div>
-                      <div className="suggestion-time">
-                        {new Date(suggestion.DateTime).toLocaleString('ru-RU', {
-                          weekday: 'short',
-                          day: 'numeric',
-                          month: 'short',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </div>
-                      <div className="suggestion-message">{suggestion.Message}</div>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={() => handleTimeSuggestionSelect(suggestion)}
-                    className="select-suggestion-btn"
-                  >
-                    Выбрать
-                  </button>
-                </div>
-              ))}
-            </div>
-            
-            <div className="suggestions-actions">
-              <button 
-                onClick={() => setShowTimeSuggestions(false)}
-                className="cancel-suggestions"
-              >
-                Закрыть
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal />
 
       <div className="reservation-content">
         <div className="reservation-form-section">
@@ -449,6 +483,7 @@ const Reservation = () => {
                       checked={formData.reservationType === type.value}
                       onChange={handleChange}
                       className="radio-input"
+                      disabled={loading}
                     />
                     <span className="radio-custom"></span>
                     <span className="radio-text">{type.label}</span>
@@ -457,7 +492,7 @@ const Reservation = () => {
               </div>
             </div>
 
-            {/* Тип дегустации (показывается только если выбрана дегустация) */}
+            {/* Тип дегустации */}
             {formData.reservationType === 'tasting' && (
               <div className="form-field-row">
                 <div className="form-field-header">
@@ -474,6 +509,7 @@ const Reservation = () => {
                         checked={formData.tastingType === type.value}
                         onChange={handleChange}
                         className="radio-input"
+                        disabled={loading}
                       />
                       <span className="radio-custom"></span>
                       <span className="radio-text">{type.label}</span>
@@ -484,7 +520,7 @@ const Reservation = () => {
               </div>
             )}
 
-            {/* Строка 1: Имя и отчество */}
+            {/* Имя */}
             <div className="form-field-row">
               <div className="form-field-header">
                 <User className="field-icon" />
@@ -496,14 +532,14 @@ const Reservation = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                required
                 placeholder="Иван Иванович"
-                className="form-input"
+                className={`form-input ${errors.name ? 'error' : ''}`}
                 disabled={loading}
               />
+              {errors.name && <span className="field-error">{errors.name}</span>}
             </div>
 
-            {/* Строка 2: Телефон */}
+            {/* Телефон */}
             <div className="form-field-row">
               <div className="form-field-header">
                 <Phone className="field-icon" />
@@ -515,14 +551,14 @@ const Reservation = () => {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                required
                 placeholder="+7 (999) 123-45-67"
-                className="form-input"
+                className={`form-input ${errors.phone ? 'error' : ''}`}
                 disabled={loading}
               />
+              {errors.phone && <span className="field-error">{errors.phone}</span>}
             </div>
 
-            {/* Строка 3: Почта и количество гостей */}
+            {/* Email и гости */}
             <div className="form-row-double">
               <div className="form-field-row half">
                 <div className="form-field-header">
@@ -536,9 +572,10 @@ const Reservation = () => {
                   value={formData.email}
                   onChange={handleChange}
                   placeholder="example@mail.ru"
-                  className="form-input"
+                  className={`form-input ${errors.email ? 'error' : ''}`}
                   disabled={loading}
                 />
+                {errors.email && <span className="field-error">{errors.email}</span>}
               </div>
               
               <div className="form-field-row half">
@@ -551,8 +588,7 @@ const Reservation = () => {
                   name="guests"
                   value={formData.guests}
                   onChange={handleChange}
-                  required
-                  className="form-input"
+                  className={`form-input ${errors.guests ? 'error' : ''}`}
                   disabled={loading}
                 >
                   <option value="">Выберите количество</option>
@@ -562,10 +598,11 @@ const Reservation = () => {
                     </option>
                   ))}
                 </select>
+                {errors.guests && <span className="field-error">{errors.guests}</span>}
               </div>
             </div>
 
-            {/* Строка 4: Дата и время */}
+            {/* Дата и время */}
             <div className="form-row-double">
               <div className="form-field-row half">
                 <div className="form-field-header">
@@ -578,11 +615,12 @@ const Reservation = () => {
                   name="date"
                   value={formData.date}
                   onChange={handleChange}
-                  required
-                  min={new Date().toISOString().split('T')[0]}
-                  className="form-input"
+                  min={getMinDate()}
+                  max={getMaxDate()}
+                  className={`form-input ${errors.date ? 'error' : ''}`}
                   disabled={loading}
                 />
+                {errors.date && <span className="field-error">{errors.date}</span>}
               </div>
               
               <div className="form-field-row half">
@@ -596,22 +634,62 @@ const Reservation = () => {
                   name="time"
                   value={formData.time}
                   onChange={handleChange}
-                  required
                   min="12:00"
                   max="23:00"
-                  className="form-input"
+                  className={`form-input ${errors.time ? 'error' : ''}`}
                   disabled={loading}
                 />
-                {formData.date && formData.time && (
-                  <div className="time-hint">
-                    <Info size={12} />
-                    <span>Время работы: 12:00 - 23:00</span>
-                  </div>
+                {errors.time ? (
+                  <span className="field-error">{errors.time}</span>
+                ) : (
+                  formData.date && formData.time && (
+                    <div className="time-hint">
+                      <Info size={12} />
+                      <span>Время работы: 12:00 - 23:00</span>
+                    </div>
+                  )
                 )}
               </div>
             </div>
 
-            {/* Дополнительные услуги (только для дегустации) */}
+            {/* Предложения альтернативных дат */}
+            {timeSuggestions.length > 0 && (
+              <div className="suggestions-section">
+                <div className="suggestions-header">
+                  <AlertTriangle className="suggestions-icon" />
+                  <h4>Предлагаем доступное время:</h4>
+                </div>
+                <div className="suggestions-list">
+                  {timeSuggestions.map((suggestion, index) => {
+                    const displayText = suggestion.Message || suggestion.message || 'Доступное время';
+                    console.log(`Предложение ${index}:`, suggestion);
+                    
+                    return (
+                      <div key={index} className="suggestion-item">
+                        <div className="suggestion-info">
+                          <CheckCircle className="available-icon" />
+                          <div>
+                            <div className="suggestion-time">
+                              {displayText}
+                            </div>
+                          </div>
+                        </div>
+                        <button 
+                          type="button"
+                          onClick={() => handleTimeSuggestionSelect(suggestion)}
+                          className="select-suggestion-btn"
+                          disabled={loading}
+                        >
+                          Выбрать
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Дополнительные услуги */}
             {formData.reservationType === 'tasting' && (
               <div className="form-field-row">
                 <div className="form-field-header">
@@ -643,7 +721,7 @@ const Reservation = () => {
               </div>
             )}
 
-            {/* Строка 5: Дополнительные пожелания */}
+            {/* Дополнительные пожелания */}
             <div className="form-field-row">
               <div className="form-field-header">
                 <MessageSquare className="field-icon" />
@@ -661,7 +739,13 @@ const Reservation = () => {
               />
             </div>
 
-            {/* Строка 6: Кнопка */}
+            {/* Информация */}
+            <div className="booking-info">
+              <Info size={16} />
+              <span>Бронирование должно быть минимум за 2 часа от текущего времени.</span>
+            </div>
+
+            {/* Кнопка отправки */}
             <div className="form-button-row">
               <button 
                 type="submit" 
@@ -687,7 +771,7 @@ const Reservation = () => {
           </form>
         </div>
 
-        {/* Блоки справа */}
+        {/* Информационный блок */}
         <div className="reservation-info-section">
           {/* Контакты */}
           <div className="info-card contact-card">
@@ -717,17 +801,17 @@ const Reservation = () => {
             </div>
           </div>
 
-          {/* Правила бронирования */}
+          {/* Правила */}
           <div className="info-card rules-card">
             <h3 className="zabava-font">Правила бронирования</h3>
             <ul className="rules-list">
-              <li>✓ Бронирование минимум за 2 часа</li>
-              <li>✓ Время работы: 12:00 - 23:00</li>
-              <li>✓ Максимальная группа: 20 человек</li>
-              <li>✓ Подтверждение брони в течение 30 минут</li>
-              <li>✓ Бесплатная отмена за 24 часа</li>
-              <li>✓ Дегустация только для групп от 2 человек</li>
-              <li>✓ Алкогольная дегустация: 18+</li>
+              <li>Бронирование минимум за 2 часа</li>
+              <li>Время работы: 12:00 - 23:00</li>
+              <li>Максимальная группа: 20 человек</li>
+              <li>Подтверждение брони в течение 30 минут</li>
+              <li>Бесплатная отмена за 24 часа</li>
+              <li>Дегустация только для групп от 2 человек</li>
+              <li>Алкогольная дегустация: 18+</li>
             </ul>
           </div>
 

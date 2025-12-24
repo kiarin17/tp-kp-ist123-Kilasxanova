@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
-import { FaUser, FaEnvelope, FaPhone, FaLock, FaUserPlus } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaLock, FaUserPlus, FaArrowLeft } from "react-icons/fa";
+import "../styles/register.css";
 
 const Register = () => {
     const [form, setForm] = useState({ 
@@ -142,433 +143,208 @@ const Register = () => {
     };
 
     return (
-        <div style={styles.container}>
-            <div style={styles.form}>
-                <div style={styles.logo}>
-                    <h1 style={styles.logoText}>Граф Суворов</h1>
-                    <p style={styles.logoSubtitle}>Регистрация нового аккаунта</p>
-                </div>
-                
-                {error && (
-                    <div style={styles.error}>
-                        <div style={styles.errorIcon}>!</div>
-                        <div style={styles.errorText}>{error}</div>
-                    </div>
-                )}
-                
-                {message && (
-                    <div style={styles.success}>
-                        <div style={styles.successIcon}>✓</div>
-                        <div style={styles.successText}>{message}</div>
-                    </div>
-                )}
-                
-                <form onSubmit={handleSubmit} style={styles.formContent}>
-                    <div style={styles.formRow}>
-                        <div style={styles.formGroup}>
-                            <label htmlFor="firstName" style={styles.label}>
-                                <FaUser style={styles.labelIcon} />
-                                Имя *
-                            </label>
-                            <input
-                                type="text"
-                                id="firstName"
-                                name="firstName"
-                                value={form.firstName}
-                                onChange={handleChange}
-                                required
-                                placeholder="Иван"
-                                style={{
-                                    ...styles.input,
-                                    ...(validationErrors.firstName ? styles.inputError : {})
-                                }}
-                            />
-                            {validationErrors.firstName && (
-                                <div style={styles.validationError}>{validationErrors.firstName}</div>
-                            )}
-                        </div>
-
-                        <div style={styles.formGroup}>
-                            <label htmlFor="lastName" style={styles.label}>
-                                <FaUser style={styles.labelIcon} />
-                                Фамилия *
-                            </label>
-                            <input
-                                type="text"
-                                id="lastName"
-                                name="lastName"
-                                value={form.lastName}
-                                onChange={handleChange}
-                                required
-                                placeholder="Иванов"
-                                style={{
-                                    ...styles.input,
-                                    ...(validationErrors.lastName ? styles.inputError : {})
-                                }}
-                            />
-                            {validationErrors.lastName && (
-                                <div style={styles.validationError}>{validationErrors.lastName}</div>
-                            )}
-                        </div>
-                    </div>
-                    
-                    <div style={styles.formGroup}>
-                        <label htmlFor="email" style={styles.label}>
-                            <FaEnvelope style={styles.labelIcon} />
-                            Email *
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={form.email}
-                            onChange={handleChange}
-                            required
-                            placeholder="example@mail.ru"
-                            style={{
-                                ...styles.input,
-                                ...(validationErrors.email ? styles.inputError : {})
-                            }}
-                        />
-                        {validationErrors.email && (
-                            <div style={styles.validationError}>{validationErrors.email}</div>
-                        )}
-                    </div>
-
-                    <div style={styles.formGroup}>
-                        <label htmlFor="phoneNumber" style={styles.label}>
-                            <FaPhone style={styles.labelIcon} />
-                            Телефон *
-                        </label>
-                        <input
-                            type="tel"
-                            id="phoneNumber"
-                            name="phoneNumber"
-                            value={form.phoneNumber}
-                            onChange={handleChange}
-                            required
-                            placeholder="+7 (999) 123-45-67"
-                            style={{
-                                ...styles.input,
-                                ...(validationErrors.phoneNumber ? styles.inputError : {})
-                            }}
-                        />
-                        {validationErrors.phoneNumber && (
-                            <div style={styles.validationError}>{validationErrors.phoneNumber}</div>
-                        )}
-                    </div>
-                    
-                    <div style={styles.formGroup}>
-                        <label htmlFor="password" style={styles.label}>
-                            <FaLock style={styles.labelIcon} />
-                            Пароль *
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={form.password}
-                            onChange={handleChange}
-                            required
-                            placeholder="Минимум 6 символов"
-                            style={{
-                                ...styles.input,
-                                ...(validationErrors.password ? styles.inputError : {})
-                            }}
-                        />
-                        {validationErrors.password && (
-                            <div style={styles.validationError}>{validationErrors.password}</div>
-                        )}
-                        <div style={styles.passwordHint}>
-                            Пароль должен содержать минимум 6 символов
-                        </div>
-                    </div>
-
-                    <div style={styles.formGroup}>
-                        <label htmlFor="confirmPassword" style={styles.label}>
-                            <FaLock style={styles.labelIcon} />
-                            Подтвердите пароль *
-                        </label>
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            value={confirmPassword}
-                            onChange={(e) => {
-                                setConfirmPassword(e.target.value);
-                                if (validationErrors.confirmPassword) {
-                                    setValidationErrors(prev => ({ ...prev, confirmPassword: '' }));
-                                }
-                            }}
-                            required
-                            placeholder="Повторите пароль"
-                            style={{
-                                ...styles.input,
-                                ...(validationErrors.confirmPassword ? styles.inputError : {})
-                            }}
-                        />
-                        {validationErrors.confirmPassword && (
-                            <div style={styles.validationError}>{validationErrors.confirmPassword}</div>
-                        )}
-                    </div>
-                    
-                    <button 
-                        type="submit" 
-                        style={{
-                            ...styles.button,
-                            ...(loading ? styles.buttonDisabled : {})
-                        }}
-                        disabled={loading}
-                    >
-                        <FaUserPlus style={{ marginRight: '10px' }} />
-                        {loading ? 'Регистрация...' : 'Зарегистрироваться'}
-                    </button>
-                </form>
-                
-                <div style={styles.links}>
-                    <p style={styles.linkText}>
-                        Уже есть аккаунт?{' '}
-                        <Link to="/login" style={styles.link}>
-                            Войти
-                        </Link>
-                    </p>
-                    <p style={styles.linkText}>
-                        <Link to="/" style={styles.link}>
-                            ← Вернуться на главную
-                        </Link>
-                    </p>
-                </div>
+        <div className="register-container">
+            <div className="register-decoration">
+                <div className="decoration-ornament ornament-1"></div>
+                <div className="decoration-ornament ornament-2"></div>
+                <div className="decoration-ornament ornament-3"></div>
             </div>
             
-            <div style={styles.footer}>
-                <p style={styles.footerText}>
-                    Регистрируясь, вы соглашаетесь с правилами использования сервиса
-                </p>
+            <div className="register-content">
+                <div className="register-header">
+                    <div className="register-logo">
+                        <div className="logo-icon"></div>
+                        <h1 className="logo-title">Граф Суворов</h1>
+                    </div>
+                    <p className="register-subtitle">Регистрация нового аккаунта</p>
+                    <div className="header-divider">
+                        <div className="divider-line"></div>
+                        <div className="divider-icon">✧</div>
+                        <div className="divider-line"></div>
+                    </div>
+                </div>
+                
+                <div className="register-form-wrapper">
+                    {error && (
+                        <div className="register-error">
+                            <div className="error-icon">!</div>
+                            <div className="error-text">{error}</div>
+                        </div>
+                    )}
+                    
+                    {message && (
+                        <div className="register-success">
+                            <div className="success-icon">✓</div>
+                            <div className="success-text">{message}</div>
+                        </div>
+                    )}
+                    
+                    <form onSubmit={handleSubmit} className="register-form">
+                        <div className="form-row">
+                            <div className="form-group">
+                                <div className="input-wrapper">
+                                    <FaUser className="input-icon" />
+                                    <input
+                                        type="text"
+                                        id="firstName"
+                                        name="firstName"
+                                        value={form.firstName}
+                                        onChange={handleChange}
+                                        required
+                                        placeholder=" "
+                                        className={`form-input ${validationErrors.firstName ? 'input-error' : ''}`}
+                                    />
+                                    <label htmlFor="firstName" className="floating-label">Имя *</label>
+                                </div>
+                                {validationErrors.firstName && (
+                                    <div className="validation-error">{validationErrors.firstName}</div>
+                                )}
+                            </div>
+
+                            <div className="form-group">
+                                <div className="input-wrapper">
+                                    <FaUser className="input-icon" />
+                                    <input
+                                        type="text"
+                                        id="lastName"
+                                        name="lastName"
+                                        value={form.lastName}
+                                        onChange={handleChange}
+                                        required
+                                        placeholder=" "
+                                        className={`form-input ${validationErrors.lastName ? 'input-error' : ''}`}
+                                    />
+                                    <label htmlFor="lastName" className="floating-label">Фамилия *</label>
+                                </div>
+                                {validationErrors.lastName && (
+                                    <div className="validation-error">{validationErrors.lastName}</div>
+                                )}
+                            </div>
+                        </div>
+                        
+                        <div className="form-group">
+                            <div className="input-wrapper">
+                                <FaEnvelope className="input-icon" />
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={form.email}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder=" "
+                                    className={`form-input ${validationErrors.email ? 'input-error' : ''}`}
+                                />
+                                <label htmlFor="email" className="floating-label">Email *</label>
+                            </div>
+                            {validationErrors.email && (
+                                <div className="validation-error">{validationErrors.email}</div>
+                            )}
+                        </div>
+
+                        <div className="form-group">
+                            <div className="input-wrapper">
+                                <FaPhone className="input-icon" />
+                                <input
+                                    type="tel"
+                                    id="phoneNumber"
+                                    name="phoneNumber"
+                                    value={form.phoneNumber}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder=" "
+                                    className={`form-input ${validationErrors.phoneNumber ? 'input-error' : ''}`}
+                                />
+                                <label htmlFor="phoneNumber" className="floating-label">Телефон *</label>
+                            </div>
+                            {validationErrors.phoneNumber && (
+                                <div className="validation-error">{validationErrors.phoneNumber}</div>
+                            )}
+                        </div>
+                        
+                        <div className="form-group">
+                            <div className="input-wrapper">
+                                <FaLock className="input-icon" />
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    value={form.password}
+                                    onChange={handleChange}
+                                    required
+                                    placeholder=" "
+                                    className={`form-input ${validationErrors.password ? 'input-error' : ''}`}
+                                />
+                                <label htmlFor="password" className="floating-label">Пароль *</label>
+                            </div>
+                            {validationErrors.password && (
+                                <div className="validation-error">{validationErrors.password}</div>
+                            )}
+                            <div className="password-hint">
+                                Пароль должен содержать минимум 6 символов
+                            </div>
+                        </div>
+
+                        <div className="form-group">
+                            <div className="input-wrapper">
+                                <FaLock className="input-icon" />
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    value={confirmPassword}
+                                    onChange={(e) => {
+                                        setConfirmPassword(e.target.value);
+                                        if (validationErrors.confirmPassword) {
+                                            setValidationErrors(prev => ({ ...prev, confirmPassword: '' }));
+                                        }
+                                    }}
+                                    required
+                                    placeholder=" "
+                                    className={`form-input ${validationErrors.confirmPassword ? 'input-error' : ''}`}
+                                />
+                                <label htmlFor="confirmPassword" className="floating-label">Подтвердите пароль *</label>
+                            </div>
+                            {validationErrors.confirmPassword && (
+                                <div className="validation-error">{validationErrors.confirmPassword}</div>
+                            )}
+                        </div>
+                        
+                        <button 
+                            type="submit" 
+                            className={`register-button ${loading ? 'loading' : ''}`}
+                            disabled={loading}
+                        >
+                          
+                            {loading ? (
+                                <>
+                                    <div className="spinner"></div>
+                                    <span>Регистрация...</span>
+                                </>
+                            ) : 'Зарегистрироваться'}
+                        </button>
+                    </form>
+                </div>
+                
+                <div className="register-links">
+                    <Link to="/login" className="login-link">
+                        <span>Уже есть аккаунт? Войти</span>
+                        <span className="link-arrow">→</span>
+                    </Link>
+                    <Link to="/" className="back-link">
+                        <FaArrowLeft />
+                        <span>Вернуться на главную</span>
+                    </Link>
+                </div>
+                
+                <div className="register-footer">
+                    <p className="footer-text">
+                        Регистрируясь, вы соглашаетесь с правилами использования сервиса
+                    </p>
+                </div>
             </div>
         </div>
     );
 };
-
-const styles = {
-    container: {
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #8B4513 0%, #D2691E 100%)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '20px',
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
-    },
-    form: {
-        background: 'white',
-        padding: '40px',
-        borderRadius: '20px',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-        width: '100%',
-        maxWidth: '500px',
-        border: '2px solid #FFD700'
-    },
-    logo: {
-        textAlign: 'center',
-        marginBottom: '30px'
-    },
-    logoText: {
-        color: '#8B4513',
-        fontSize: '2.5rem',
-        fontWeight: 'bold',
-        margin: '0 0 10px 0'
-    },
-    logoSubtitle: {
-        color: '#666',
-        fontSize: '1rem',
-        margin: 0
-    },
-    formContent: {
-        marginBottom: '20px'
-    },
-    formRow: {
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '15px',
-        marginBottom: '15px'
-    },
-    formGroup: {
-        marginBottom: '20px'
-    },
-    label: {
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: '8px',
-        color: '#8B4513',
-        fontWeight: '600',
-        fontSize: '14px'
-    },
-    labelIcon: {
-        marginRight: '8px',
-        fontSize: '16px'
-    },
-    input: {
-        width: '100%',
-        padding: '14px 16px',
-        border: '2px solid #FFE4B5',
-        borderRadius: '10px',
-        fontSize: '1rem',
-        transition: 'all 0.3s ease',
-        background: '#fff',
-        color: '#333'
-    },
-    inputError: {
-        borderColor: '#ff4444',
-        background: '#fff8f8'
-    },
-    validationError: {
-        color: '#ff4444',
-        fontSize: '12px',
-        marginTop: '5px'
-    },
-    passwordHint: {
-        fontSize: '12px',
-        color: '#666',
-        marginTop: '5px',
-        fontStyle: 'italic'
-    },
-    button: {
-        width: '100%',
-        background: 'linear-gradient(135deg, #8B4513, #D2691E)',
-        color: 'white',
-        border: 'none',
-        padding: '16px',
-        borderRadius: '10px',
-        fontSize: '1.1rem',
-        fontWeight: 'bold',
-        cursor: 'pointer',
-        transition: 'all 0.3s ease',
-        marginTop: '10px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    buttonDisabled: {
-        opacity: 0.7,
-        cursor: 'not-allowed'
-    },
-    error: {
-        background: 'linear-gradient(135deg, #ff4444, #cc0000)',
-        color: 'white',
-        padding: '15px',
-        borderRadius: '10px',
-        marginBottom: '25px',
-        display: 'flex',
-        alignItems: 'center',
-        animation: 'slideIn 0.3s ease-out'
-    },
-    errorIcon: {
-        background: 'white',
-        color: '#ff4444',
-        width: '24px',
-        height: '24px',
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontWeight: 'bold',
-        marginRight: '12px',
-        fontSize: '14px'
-    },
-    errorText: {
-        flex: 1,
-        fontWeight: '500'
-    },
-    success: {
-        background: 'linear-gradient(135deg, #4CAF50, #2E7D32)',
-        color: 'white',
-        padding: '15px',
-        borderRadius: '10px',
-        marginBottom: '25px',
-        display: 'flex',
-        alignItems: 'center',
-        animation: 'slideIn 0.3s ease-out'
-    },
-    successIcon: {
-        background: 'white',
-        color: '#4CAF50',
-        width: '24px',
-        height: '24px',
-        borderRadius: '50%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontWeight: 'bold',
-        marginRight: '12px',
-        fontSize: '14px'
-    },
-    successText: {
-        flex: 1,
-        fontWeight: '500'
-    },
-    links: {
-        textAlign: 'center',
-        marginTop: '20px',
-        paddingTop: '20px',
-        borderTop: '1px solid #eee'
-    },
-    linkText: {
-        color: '#666',
-        fontSize: '0.95rem',
-        margin: '0 0 10px 0'
-    },
-    link: {
-        color: '#8B4513',
-        fontWeight: '600',
-        textDecoration: 'none',
-        transition: 'color 0.3s ease'
-    },
-    footer: {
-        marginTop: '30px',
-        textAlign: 'center',
-        color: 'rgba(255, 255, 255, 0.8)',
-        fontSize: '0.8rem',
-        maxWidth: '500px',
-        padding: '0 20px'
-    },
-    footerText: {
-        margin: 0
-    }
-};
-
-// Добавляем анимацию
-if (typeof document !== 'undefined') {
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from {
-                transform: translateY(-10px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        input:focus {
-            outline: none;
-            border-color: #8B4513;
-            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
-        }
-        
-        .link:hover {
-            color: #D2691E;
-            text-decoration: underline;
-        }
-        
-        .button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(139, 69, 19, 0.3);
-        }
-    `;
-    document.head.appendChild(style);
-}
 
 export default Register;

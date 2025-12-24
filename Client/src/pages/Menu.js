@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/menu.css';
-import WelcomBlock from '../components/WelcomBlock';
 import axios from 'axios';
 
 // Импортируем изображения
@@ -268,7 +267,7 @@ const Menu = () => {
   if (loading) {
     return (
       <>
-        <WelcomBlock />
+      
         <div className="menu-container">
           <div className="loading">Загрузка меню...</div>
         </div>
@@ -278,7 +277,7 @@ const Menu = () => {
 
   return (
     <>
-      <WelcomBlock />
+      
       <div className="menu-container">
         <div className="menu-header">
           <h1 className="menu-title">Меню</h1>
@@ -582,14 +581,14 @@ const Menu = () => {
                     onClick={() => handleEditItem(item)}
                     title="Редактировать"
                   >
-                    ✏️
+                    Ред.
                   </button>
                   <button 
                     className="delete-btn"
                     onClick={() => handleDeleteItem(item.id)}
                     title="Скрыть блюдо"
                   >
-                    🗑️
+                    Удалить
                   </button>
                 </div>
               )}

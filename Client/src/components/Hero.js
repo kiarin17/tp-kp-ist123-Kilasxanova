@@ -9,7 +9,7 @@ export default function Hero() {
     <section className="hero">
       <img className="hero-img" src={hero} alt="background" />
       <div className="hero-content">
-        {/* <h1>Граф Суворов</h1> */}
+        <h1 className="hero-title">Граф Суворов</h1>
       </div>
       <div className="hero-subtitle3">
         <p>

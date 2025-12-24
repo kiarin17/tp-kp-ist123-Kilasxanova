@@ -942,3 +942,448 @@
     font-size: 1.5rem;
   }
 }
+
+/* Стили для модального окна (попап) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--wood);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.modal-icon.success {
+  color: #28a745;
+}
+
+.modal-icon.error {
+  color: var(--accent-red);
+}
+
+.modal-title {
+  text-align: center;
+  color: var(--brown);
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  font-family: 'Zabava', cursive;
+}
+
+.modal-message {
+  text-align: center;
+  color: var(--text-medium);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  padding: 0 20px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.modal-button {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Forum', serif;
+}
+
+.modal-button.primary {
+  background: var(--primary-red);
+  color: var(--white);
+  min-width: 120px;
+}
+
+.modal-button.primary:hover {
+  background: var(--dark-red);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139, 0, 0, 0.3);
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--text-medium);
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.3s ease;
+}
+
+.modal-close:hover {
+  color: var(--primary-red);
+}
+
+/* Стили для предложений альтернативных дат */
+.suggestions-section {
+  background: rgba(139, 0, 0, 0.05);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 20px 0;
+  border: 2px solid var(--primary-red);
+}
+
+.suggestions-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.suggestions-header h4 {
+  color: var(--primary-red);
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.suggestions-icon {
+  color: var(--accent-red);
+  width: 20px;
+  height: 20px;
+}
+
+.suggestions-subtitle {
+  color: var(--brown);
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+.suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.suggestion-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+  background: var(--white);
+  border-radius: 12px;
+  border: 2px solid var(--wood);
+  transition: all 0.3s ease;
+}
+
+.suggestion-item:hover {
+  border-color: var(--primary-red);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(139, 0, 0, 0.1);
+}
+
+.suggestion-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.available-icon {
+  color: #28a745;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.suggestion-time {
+  color: var(--brown);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}
+
+.suggestion-message {
+  color: var(--text-medium);
+  font-size: 0.9rem;
+}
+
+.select-suggestion-btn {
+  padding: 10px 20px;
+  background: var(--primary-red);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.select-suggestion-btn:hover {
+  background: var(--dark-red);
+  transform: translateY(-2px);
+}
+
+/* Простая ошибка */
+.simple-error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: rgba(204, 51, 51, 0.1);
+  border-radius: 12px;
+  border-left: 5px solid var(--accent-red);
+  margin: 10px 0;
+}
+
+.error-icon-small {
+  color: var(--accent-red);
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.error-text {
+  color: var(--dark-red);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* Для типов дегустации */
+.age-warning {
+  background: var(--accent-red);
+  color: var(--white);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.tasting-type-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.tasting-radio {
+  min-width: 200px !important;
+}
+
+/* Адаптивность для модального окна */
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 30px 20px;
+    width: 95%;
+  }
+  
+  .modal-title {
+    font-size: 1.5rem;
+  }
+  
+  .modal-message {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+  
+  .modal-button {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+  
+  .suggestion-item {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .select-suggestion-btn {
+    align-self: flex-end;
+  }
+}
+
+/* Дополнительные стили для исправленного фронтенда */
+
+/* Ошибки полей */
+.field-error {
+  color: var(--accent-red);
+  font-size: 0.9rem;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.form-input.error,
+.form-textarea.error,
+.form-select.error {
+  border-color: var(--accent-red);
+  background: rgba(204, 51, 51, 0.05);
+}
+
+/* Информация о бронировании */
+.booking-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  background: rgba(91, 11, 11, 0.05);
+  border-radius: 12px;
+  border-left: 4px solid var(--dark-red);
+  color: var(--dark-red);
+  font-size: 0.95rem;
+  margin: 10px 0;
+}
+
+.booking-info svg {
+  color: var(--dark-red);
+  flex-shrink: 0;
+}
+
+/* Стили для загрузки */
+.loading-spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Для времени в предложениях */
+.suggestion-item .suggestion-time {
+  font-family: 'Forum', serif;
+  font-weight: 600;
+}
+
+/* Субтитры и подсказки */
+.time-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-medium);
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+.header-subtitle {
+  color: var(--light-brown);
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 20px auto 0;
+  line-height: 1.6;
+  font-family: 'Forum', serif;
+  text-align: center;
+}
+
+/* Бадж для необязательных полей */
+.optional-badge {
+  background: var(--wood);
+  color: var(--brown);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  margin-left: 10px;
+  font-family: 'Forum', serif;
+}
+
+/* Адаптивность для предложений */
+@media (max-width: 768px) {
+  .suggestion-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+  
+  .select-suggestion-btn {
+    align-self: flex-end;
+  }
+  
+  .booking-info {
+    font-size: 0.9rem;
+    padding: 12px;
+  }
+}
+
+/* Для разных типов дегустации */
+.tasting-radio {
+  position: relative;
+}
+
+.tasting-radio .age-warning {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--accent-red);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+
+/* Обновляем стили модального окна для лучшего отображения */
+.modal-content {
+  max-width: 450px;
+}
+
+.modal-message {
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 25px 15px;
+  }
+  
+  .modal-title {
+    font-size: 1.4rem;
+  }
+  
+  .modal-message {
+    font-size: 1rem;
+    padding: 0;
+  }
+}

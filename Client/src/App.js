@@ -52,7 +52,6 @@ function App() {
       <Header />
       <main>
         <Routes>
-          {/* Публичные маршруты */}
           <Route path="/" element={<Home />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/tasting" element={<Tasting />} />
@@ -60,18 +59,17 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           
-          {/* Аутентификация */}
+       
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           
-          {/* Защищенные маршруты */}
           <Route path="/profile" element={
             <PrivateRoute>
               <Profile />
             </PrivateRoute>
           } />
           
-          {/* Клиентские маршруты */}
+    
           <Route path="/client" element={
             <PrivateRoute>
               <ClientDashboard />
@@ -93,7 +91,7 @@ function App() {
             </PrivateRoute>
           } />
           
-          {/* Админ и курьер */}
+    
           <Route path="/admin" element={
             <PrivateRoute requiredRole="Admin">
               <Admin />
@@ -105,7 +103,7 @@ function App() {
             </PrivateRoute>
           } />
           
-          {/* Резервный маршрут для несуществующих страниц */}
+          
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>

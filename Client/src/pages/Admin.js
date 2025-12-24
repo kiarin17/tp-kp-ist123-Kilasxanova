@@ -1505,7 +1505,7 @@ const Admin = () => {
       {/* Шапка */}
       <div className="admin-header">
         <h1>
-          <span className="header-text">⚡</span>
+          <span className="header-text"></span>
           Админ-панель
         </h1>
         <div className="admin-user">
@@ -1588,7 +1588,7 @@ const Admin = () => {
             
             <div className="stats-grid">
               <div className="stat-card stat-primary" onClick={() => setActiveTab('orders')} style={{cursor: 'pointer'}}>
-                <div className="stat-text">📦</div>
+                <div className="stat-text"></div>
                 <h3>Всего заказов</h3>
                 <span className="stat-number">{stats.orders?.total || 0}</span>
               </div>
@@ -1597,31 +1597,31 @@ const Admin = () => {
                 setActiveTab('orders');
                 setFilters({...filters, status: 'Pending'});
               }} style={{cursor: 'pointer'}}>
-                <div className="stat-text">⏰</div>
+                <div className="stat-text"></div>
                 <h3>Ожидают подтверждения</h3>
                 <span className="stat-number">{stats.orders?.pending || 0}</span>
               </div>
               
               <div className="stat-card stat-success">
-                <div className="stat-text">📅</div>
+                <div className="stat-text"></div>
                 <h3>Заказов сегодня</h3>
                 <span className="stat-number">{stats.orders?.today || 0}</span>
               </div>
               
               <div className="stat-card stat-revenue">
-                <div className="stat-text">💰</div>
+                <div className="stat-text"></div>
                 <h3>Выручка сегодня</h3>
                 <span className="stat-number">{formatCurrency(stats.revenue?.today || 0)}</span>
               </div>
               
               <div className="stat-card stat-users" onClick={() => setActiveTab('users')} style={{cursor: 'pointer'}}>
-                <div className="stat-text">👥</div>
+                <div className="stat-text"></div>
                 <h3>Всего пользователей</h3>
                 <span className="stat-number">{stats.users?.total || 0}</span>
               </div>
               
               <div className="stat-card stat-couriers">
-                <div className="stat-text">🚴</div>
+                <div className="stat-text"></div>
                 <h3>Свободных курьеров</h3>
                 <span className="stat-number">{stats.users?.availableCouriers || 0}</span>
               </div>
@@ -1668,7 +1668,7 @@ const Admin = () => {
               </div>
             ) : filteredOrders.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-text">📭</div>
+                <div className="empty-text"></div>
                 <h3>Нет заказов</h3>
                 <p>Здесь появятся заказы от клиентов</p>
                 <button 
@@ -1805,22 +1805,22 @@ const Admin = () => {
             {/* Статистика бронирований */}
             <div className="reservations-stats">
               <div className="stat-card" onClick={() => setReservationFilters({...reservationFilters, status: 'pending'})} style={{cursor: 'pointer'}}>
-                <div className="stat-text">⏰</div>
+                <div className="stat-text"></div>
                 <h3>Ожидают</h3>
                 <span className="stat-number">{reservationsStats?.pending || 0}</span>
               </div>
               <div className="stat-card" onClick={() => setReservationFilters({...reservationFilters, date: 'today'})} style={{cursor: 'pointer'}}>
-                <div className="stat-text">📅</div>
+                <div className="stat-text"></div>
                 <h3>Сегодня</h3>
                 <span className="stat-number">{reservationsStats?.today || 0}</span>
               </div>
               <div className="stat-card" onClick={() => setReservationFilters({...reservationFilters, status: 'confirmed'})} style={{cursor: 'pointer'}}>
-                <div className="stat-text">✓</div>
+                <div className="stat-text"></div>
                 <h3>Подтверждено</h3>
                 <span className="stat-number">{reservationsStats?.upcoming || 0}</span>
               </div>
               <div className="stat-card" onClick={() => setReservationFilters({...reservationFilters, status: 'cancelled'})} style={{cursor: 'pointer'}}>
-                <div className="stat-text">✗</div>
+                <div className="stat-text"></div>
                 <h3>Отменено</h3>
                 <span className="stat-number">{reservationsStats?.cancelledToday || 0}</span>
               </div>
@@ -1834,7 +1834,7 @@ const Admin = () => {
               </div>
             ) : reservations.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-text">📭</div>
+                <div className="empty-text"></div>
                 <h3>Нет бронирований</h3>
                 <p>Здесь появятся бронирования клиентов</p>
                 <button 
@@ -1949,7 +1949,7 @@ const Admin = () => {
               </div>
             ) : users.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-text">👤</div>
+                <div className="empty-text"></div>
                 <h3>Нет пользователей</h3>
                 <p>Здесь появятся пользователи системы</p>
                 <button 
@@ -2057,7 +2057,7 @@ const Admin = () => {
               </div>
             ) : categories.length === 0 ? (
               <div className="empty-state">
-                <div className="empty-text">📂</div>
+                <div className="empty-text"></div>
                 <h3>Нет категорий</h3>
                 <p>Добавьте категории для организации меню</p>
                 <button 

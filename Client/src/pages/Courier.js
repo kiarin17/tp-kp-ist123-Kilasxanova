@@ -58,7 +58,7 @@ const Courier = () => {
       await axios.put(`http://localhost:5110/api/courier/take-order/${orderId}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      fetchCourierData(token); // Обновляем данные
+      fetchCourierData(token); 
     } catch (error) {
       console.error('Ошибка принятия заказа:', error);
     }
@@ -114,32 +114,32 @@ const Courier = () => {
           className={`tab-btn ${activeTab === 'dashboard' ? 'active' : ''}`}
           onClick={() => setActiveTab('dashboard')}
         >
-          📊 Обзор
+          Обзор
         </button>
         <button 
           className={`tab-btn ${activeTab === 'my-orders' ? 'active' : ''}`}
           onClick={() => setActiveTab('my-orders')}
         >
-          🛵 Мои заказы
+          Мои заказы
         </button>
         <button 
           className={`tab-btn ${activeTab === 'available' ? 'active' : ''}`}
           onClick={() => setActiveTab('available')}
         >
-          📦 Доступные заказы
+          Доступные заказы
         </button>
         <button 
           className={`tab-btn ${activeTab === 'earnings' ? 'active' : ''}`}
           onClick={() => setActiveTab('earnings')}
         >
-          💰 Заработок
+          Заработок
         </button>
       </div>
 
       <div className="courier-content">
         {activeTab === 'dashboard' && (
           <div className="dashboard">
-            <h2>Моя статистика</h2>
+            <h3>Моя статистика</h3>
             {stats.Stats && (
               <div className="stats-grid">
                 <div className="stat-card">
@@ -165,7 +165,7 @@ const Courier = () => {
 
         {activeTab === 'my-orders' && (
           <div className="my-orders-section">
-            <h2>Мои текущие заказы</h2>
+            <h3>Мои текущие заказы</h3>
             <div className="orders-list">
               {myOrders.map(order => (
                 <div key={order.id} className="order-card">
@@ -210,7 +210,7 @@ const Courier = () => {
 
         {activeTab === 'available' && (
           <div className="available-orders-section">
-            <h2>Доступные заказы</h2>
+            <h3>Доступные заказы</h3>
             <div className="orders-list">
               {availableOrders.map(order => (
                 <div key={order.id} className="order-card available">
@@ -240,7 +240,7 @@ const Courier = () => {
 
         {activeTab === 'earnings' && (
           <div className="earnings-section">
-            <h2>Мой заработок</h2>
+            <h3>Мой заработок</h3>
             <p>Здесь будет статистика по заработку за разные периоды</p>
           </div>
         )}

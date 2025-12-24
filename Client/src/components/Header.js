@@ -66,22 +66,22 @@ export default function Header() {
               
               <div className="user-dropdown">
                 <Link to="/profile" className="dropdown-item">
-                  <span className="dropdown-icon">👤</span>
+                  <span className="dropdown-icon"></span>
                   Профиль
                 </Link>
                 
                 {user.role === 'Client' && (
                   <>
                     <Link to="/client" className="dropdown-item">
-                      <span className="dropdown-icon">🍽️</span>
+                      <span className="dropdown-icon"></span>
                       Заказать еду
                     </Link>
                     <Link to="/client/orders" className="dropdown-item">
-                      <span className="dropdown-icon">📋</span>
+                      <span className="dropdown-icon"></span>
                       Мои заказы
                     </Link>
                     <Link to="/client/cart" className="dropdown-item">
-                      <span className="dropdown-icon">🛒</span>
+                      <span className="dropdown-icon"></span>
                       Корзина
                     </Link>
                   </>
@@ -89,7 +89,7 @@ export default function Header() {
                 
                 {user.role === 'Admin' && (
                   <Link to="/admin" className="dropdown-item">
-                    <span className="dropdown-icon">⚙️</span>
+                    <span className="dropdown-icon"></span>
                     Админ-панель
                   </Link>
                 )}
@@ -102,7 +102,7 @@ export default function Header() {
                 )}
                 
                 <button onClick={handleLogout} className="dropdown-item logout">
-                  <span className="dropdown-icon">↪</span>
+                  <span className="dropdown-icon"></span>
                   Выйти
                 </button>
               </div>

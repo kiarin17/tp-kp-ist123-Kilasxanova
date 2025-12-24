@@ -12,7 +12,7 @@ const ClientCart = () => {
   const [formData, setFormData] = useState({
     deliveryAddress: '',
     customerPhone: '',
-    paymentMethod: 'cash',
+    paymentMethod: 'card', // Изменено по умолчанию на card
     specialInstructions: ''
   });
   const navigate = useNavigate();
@@ -39,7 +39,8 @@ const ClientCart = () => {
     setFormData(prev => ({
       ...prev,
       customerPhone: userObj.phoneNumber || '',
-      deliveryAddress: userObj.address || ''
+      deliveryAddress: userObj.address || '',
+      paymentMethod: 'card' // Устанавливаем card как значение по умолчанию
     }));
   }, [navigate]);
 
@@ -432,16 +433,7 @@ const ClientCart = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <label style={{ fontSize: '14px', fontWeight: '600', color: '#333' }}>Способ оплаты</label>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '15px', border: '2px solid #eee', borderRadius: '8px', cursor: 'pointer' }}>
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="cash"
-                      checked={formData.paymentMethod === 'cash'}
-                      onChange={(e) => setFormData({...formData, paymentMethod: e.target.value})}
-                    />
-                    <span>Наличными при получении</span>
-                  </label>
+                  {/* Удалена опция "Наличными", оставлена только оплата картой */}
                   <label style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '15px', border: '2px solid #eee', borderRadius: '8px', cursor: 'pointer' }}>
                     <input
                       type="radio"
@@ -450,7 +442,7 @@ const ClientCart = () => {
                       checked={formData.paymentMethod === 'card'}
                       onChange={(e) => setFormData({...formData, paymentMethod: e.target.value})}
                     />
-                    <span> Картой онлайн</span>
+                    <span>Картой онлайн</span>
                   </label>
                 </div>
               </div>

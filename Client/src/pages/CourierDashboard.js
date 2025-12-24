@@ -74,9 +74,9 @@ const CourierDashboard = () => {
     } catch (error) {
       console.error('Ошибка загрузки заказов:', error);
       
-      // Если endpoint не работает, используем мок-данные
+      // Если endpoint не работает, 
       if (error.response?.status === 404) {
-        console.log('Используем мок-данные');
+        console.log('Используем данные');
         setOrders(getMockOrders());
       } else {
         setError('Ошибка загрузки заказов');
@@ -86,7 +86,7 @@ const CourierDashboard = () => {
     }
   };
 
-  // Мок-данные для демонстрации
+  // данные для демонстрации
   const getMockOrders = () => {
     return [
       {

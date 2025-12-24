@@ -351,7 +351,7 @@ const ClientDashboard = () => {
                       <div className="item-bottom">
                         <div>
                           <span className="item-price">
-                            {item.price || 0} ₽
+                            {item.price || 0} 
                           </span>
                           {item.weight && (
                             <span className="item-weight"> • {item.weight}г</span>
@@ -381,7 +381,7 @@ const ClientDashboard = () => {
           className="floating-cart-button"
           onClick={() => navigate('/client/cart')}
         >
-          <span className="cart-icon">🛒</span>
+          <span className="cart-icon"></span>
           {getTotalItems()} товаров • {getTotal()} ₽
         </button>
       )}
